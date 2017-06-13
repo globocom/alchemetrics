@@ -1,4 +1,4 @@
-defmodule Metrics.Mixfile do
+defmodule ElixirMetrics.Mixfile do
   use Mix.Project
 
   def project do
@@ -16,7 +16,7 @@ defmodule Metrics.Mixfile do
   def application do
     # Specify extra applications you'll use from Erlang/Elixir
     [extra_applications: [:logger, :exometer_core, :poison],
-     mod: {Metrics.Application, []}]
+     mod: {ElixirMetrics.Application, []}]
   end
 
   # Dependencies can be Hex packages:

@@ -1,6 +1,6 @@
-defmodule Metrics do
-  alias Metrics.Event
-  alias Metrics.Producer
+defmodule ElixirMetrics do
+  alias ElixirMetrics.Event
+  alias ElixirMetrics.Producer
 
   def count(type, metric) when is_bitstring(type) and is_bitstring(metric) do
     Event.create(%{type: type, metric: metric, action: :count})

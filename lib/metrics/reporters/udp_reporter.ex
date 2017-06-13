@@ -1,4 +1,4 @@
-defmodule Metrics.UDPReporter do
+defmodule ElixirMetrics.UDPReporter do
   @moduledoc false
 
   @behaviour :exometer_report

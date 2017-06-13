@@ -1,7 +1,7 @@
-defmodule Metrics.Handler do
-  alias Metrics.Event
-  alias Metrics.Metric
-  alias Metrics.MetricBackend
+defmodule ElixirMetrics.Handler do
+  alias ElixirMetrics.Event
+  alias ElixirMetrics.Metric
+  alias ElixirMetrics.MetricBackend
 
   def start_link(%Event{} = event) do
     Task.start_link(fn ->

@@ -1,8 +1,8 @@
-defmodule Metrics.ProducerState do
+defmodule ElixirMetrics.ProducerState do
   defstruct [event_store: :queue.new, demand: 0]
 
-  alias Metrics.Event
-  alias Metrics.ProducerState
+  alias ElixirMetrics.Event
+  alias ElixirMetrics.ProducerState
 
   def store_event(%ProducerState{} = old_state, %Event{} = event) do
     new_event_store = :queue.in(event, old_state.event_store)

@@ -1,14 +1,14 @@
-defmodule Metrics.Consumer do
+defmodule ElixirMetrics.Consumer do
   use ConsumerSupervisor
 
   def start_link() do
     children = [
-      worker(Metrics.Handler, [], restart: :temporary)
+      worker(ElixirMetrics.Handler, [], restart: :temporary)
     ]
 
     ConsumerSupervisor.start_link(
       children, strategy: :one_for_one,
-      subscribe_to: [{Metrics.Producer, max_demand: 150}]
+      subscribe_to: [{ElixirMetrics.Producer, max_demand: 150}]
     )
   end
 end

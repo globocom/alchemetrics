@@ -1,13 +1,13 @@
-defmodule Metrics.Producer do
+defmodule ElixirMetrics.Producer do
   use GenStage
 
-  alias Metrics.ProducerState
+  alias ElixirMetrics.ProducerState
 
   def start_link(name \\ __MODULE__), do: GenStage.start_link(name, %ProducerState{}, name: name)
 
   def init(%ProducerState{} = initial_state), do: {:producer, initial_state}
 
-  def enqueue(name \\ __MODULE__, %Metrics.Event{} = event), do: GenStage.cast(name, {:enqueue, event})
+  def enqueue(name \\ __MODULE__, %ElixirMetrics.Event{} = event), do: GenStage.cast(name, {:enqueue, event})
 
   def handle_cast({:enqueue, event}, %ProducerState{} = state) do
     state

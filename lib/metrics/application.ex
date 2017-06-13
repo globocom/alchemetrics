@@ -1,4 +1,4 @@
-defmodule Metrics.Application do
+defmodule ElixirMetrics.Application do
   # See http://elixir-lang.org/docs/stable/elixir/Application.html
   # for more information on OTP Applications
   @moduledoc false
@@ -10,16 +10,16 @@ defmodule Metrics.Application do
 
     # Define workers and child supervisors to be supervised
     children = [
-      # Starts a worker by calling: Metrics.Worker.start_link(arg1, arg2, arg3)
-      # worker(Metrics.Worker, [arg1, arg2, arg3]),
-      worker(Metrics.ReporterStarter, []),
-      worker(Metrics.Producer, []),
-      worker(Metrics.Consumer, []),
+      # Starts a worker by calling: ElixirMetrics.Worker.start_link(arg1, arg2, arg3)
+      # worker(ElixirMetrics.Worker, [arg1, arg2, arg3]),
+      worker(ElixirMetrics.ReporterStarter, []),
+      worker(ElixirMetrics.Producer, []),
+      worker(ElixirMetrics.Consumer, []),
     ]
 
     # See http://elixir-lang.org/docs/stable/elixir/Supervisor.html
     # for other strategies and supported options
-    opts = [strategy: :one_for_one, name: Metrics.Supervisor]
+    opts = [strategy: :one_for_one, name: ElixirMetrics.Supervisor]
     Supervisor.start_link(children, opts)
   end
 end

@@ -1,12 +1,12 @@
-defmodule Metrics.Metric do
+defmodule ElixirMetrics.Metric do
   @enforce_keys [:scope, :name, :value]
   defstruct [:scope, :name, :value, :user_data, report_interval: 10_000]
 
-  def from_event(%Metrics.Event{} = event) do
-    %Metrics.Metric{name: format_name(event), scope: event.action |> to_scope, value: event.value, user_data: user_data()}
+  def from_event(%ElixirMetrics.Event{} = event) do
+    %ElixirMetrics.Metric{name: format_name(event), scope: event.action |> to_scope, value: event.value, user_data: user_data()}
   end
 
-  defp format_name(%Metrics.Event{} = event), do: [event.type, event.metric, event.action |> to_scope |> to_string]
+  defp format_name(%ElixirMetrics.Event{} = event), do: [event.type, event.metric, event.action |> to_scope |> to_string]
 
   defp user_data do
     case Application.get_env(:metrics, :user_data, []) do
