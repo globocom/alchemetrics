@@ -2,7 +2,7 @@
   "annotations": {
     "list": [
       {
-        "datasource": "UPA-Elixir-2.0",
+        "datasource": "Deadpool",
         "enable": true,
         "iconColor": "rgba(255, 96, 96, 1)",
         "limit": 100,
@@ -34,7 +34,7 @@
             "counter": "#C15C17"
           },
           "bars": false,
-          "datasource": "UPA-Elixir-2.0",
+          "datasource": "Deadpool",
           "fill": 1,
           "id": 8,
           "legend": {
@@ -202,7 +202,7 @@
             "min": "#DEDAF7"
           },
           "bars": false,
-          "datasource": "UPA-Elixir-2.0",
+          "datasource": "Deadpool",
           "fill": 1,
           "id": 15,
           "legend": {
@@ -423,7 +423,7 @@
             "mean": "#CFFAFF"
           },
           "bars": false,
-          "datasource": "UPA-Elixir-2.0",
+          "datasource": "Deadpool",
           "fill": 1,
           "id": 16,
           "legend": {
@@ -613,7 +613,7 @@
             "rgba(237, 129, 40, 0.89)",
             "rgba(245, 54, 54, 0.9)"
           ],
-          "datasource": "UPA-Elixir-2.0",
+          "datasource": "Deadpool",
           "format": "none",
           "gauge": {
             "maxValue": 200000,
@@ -708,7 +708,7 @@
             "rgba(237, 129, 40, 0.89)",
             "rgba(245, 54, 54, 0.9)"
           ],
-          "datasource": "UPA-Elixir-2.0",
+          "datasource": "Deadpool",
           "format": "none",
           "gauge": {
             "maxValue": 200,
@@ -804,7 +804,7 @@
             "label": "Others",
             "threshold": 0
           },
-          "datasource": "UPA-Elixir-2.0",
+          "datasource": "Deadpool",
           "fontSize": "110%",
           "format": "short",
           "id": 73,
@@ -874,7 +874,7 @@
             "label": "Others",
             "threshold": 0
           },
-          "datasource": "UPA-Elixir-2.0",
+          "datasource": "Deadpool",
           "fontSize": "110%",
           "format": "short",
           "id": 74,
@@ -939,7 +939,7 @@
         {
           "aliasColors": {},
           "bars": false,
-          "datasource": "UPA-Elixir-2.0",
+          "datasource": "Deadpool",
           "fill": 1,
           "id": 75,
           "legend": {
@@ -1046,7 +1046,7 @@
             "queue_size": "#6ED0E0"
           },
           "bars": false,
-          "datasource": "UPA-Elixir-2.0",
+          "datasource": "Deadpool",
           "fill": 1,
           "id": 68,
           "legend": {
@@ -1198,7 +1198,7 @@
               "value": "max"
             }
           ],
-          "datasource": "UPA-Elixir-2.0",
+          "datasource": "Deadpool",
           "fontSize": "100%",
           "id": 42,
           "links": [],
@@ -1285,7 +1285,7 @@
               "value": "avg"
             }
           ],
-          "datasource": "UPA-Elixir-2.0",
+          "datasource": "Deadpool",
           "fontSize": "100%",
           "id": 31,
           "links": [],
@@ -1372,7 +1372,7 @@
               "value": "max"
             }
           ],
-          "datasource": "UPA-Elixir-2.0",
+          "datasource": "Deadpool",
           "fontSize": "100%",
           "id": 67,
           "links": [],
@@ -1459,7 +1459,7 @@
               "value": "avg"
             }
           ],
-          "datasource": "UPA-Elixir-2.0",
+          "datasource": "Deadpool",
           "fontSize": "100%",
           "id": 17,
           "links": [],
@@ -1542,7 +1542,7 @@
         {
           "aliasColors": {},
           "bars": false,
-          "datasource": "UPA-Elixir-2.0",
+          "datasource": "Deadpool",
           "fill": 1,
           "id": 80,
           "legend": {
@@ -1659,7 +1659,7 @@
             "query count": "#CFFAFF"
           },
           "bars": false,
-          "datasource": "UPA-Elixir-2.0",
+          "datasource": "Deadpool",
           "fill": 1,
           "id": 21,
           "legend": {
@@ -1751,7 +1751,7 @@
         {
           "aliasColors": {},
           "bars": false,
-          "datasource": "UPA-Elixir-2.0",
+          "datasource": "Deadpool",
           "fill": 1,
           "id": 23,
           "legend": {
@@ -1963,7 +1963,7 @@
         {
           "aliasColors": {},
           "bars": false,
-          "datasource": "UPA-Elixir-2.0",
+          "datasource": "Deadpool",
           "fill": 1,
           "id": 22,
           "legend": {
@@ -2128,7 +2128,7 @@
         {
           "aliasColors": {},
           "bars": false,
-          "datasource": "UPA-Elixir-2.0",
+          "datasource": "Deadpool",
           "fill": 1,
           "id": 33,
           "legend": {
@@ -2230,7 +2230,7 @@
         {
           "aliasColors": {},
           "bars": false,
-          "datasource": "UPA-Elixir-2.0",
+          "datasource": "Deadpool",
           "fill": 1,
           "id": 35,
           "legend": {
@@ -2421,7 +2421,7 @@
         {
           "aliasColors": {},
           "bars": false,
-          "datasource": "UPA-Elixir-2.0",
+          "datasource": "Deadpool",
           "fill": 1,
           "id": 34,
           "legend": {
@@ -2843,7 +2843,7 @@
             "responses": "#2F575E"
           },
           "bars": false,
-          "datasource": "UPA-Elixir-2.0",
+          "datasource": "Deadpool",
           "fill": 1,
           "id": 5,
           "legend": {
@@ -2958,7 +2958,7 @@
             "min": "#DEDAF7"
           },
           "bars": false,
-          "datasource": "UPA-Elixir-2.0",
+          "datasource": "Deadpool",
           "fill": 1,
           "id": 6,
           "legend": {
@@ -3192,7 +3192,7 @@
             "responses": "#2F575E"
           },
           "bars": false,
-          "datasource": "UPA-Elixir-2.0",
+          "datasource": "Deadpool",
           "fill": 1,
           "id": 90,
           "legend": {
@@ -3307,7 +3307,7 @@
             "min": "#DEDAF7"
           },
           "bars": false,
-          "datasource": "UPA-Elixir-2.0",
+          "datasource": "Deadpool",
           "fill": 1,
           "id": 91,
           "legend": {
@@ -3541,7 +3541,7 @@
             "responses": "#2F575E"
           },
           "bars": false,
-          "datasource": "UPA-Elixir-2.0",
+          "datasource": "Deadpool",
           "fill": 1,
           "id": 92,
           "legend": {
@@ -3656,7 +3656,7 @@
             "min": "#DEDAF7"
           },
           "bars": false,
-          "datasource": "UPA-Elixir-2.0",
+          "datasource": "Deadpool",
           "fill": 1,
           "id": 93,
           "legend": {
@@ -3890,7 +3890,7 @@
             "responses": "#2F575E"
           },
           "bars": false,
-          "datasource": "UPA-Elixir-2.0",
+          "datasource": "Deadpool",
           "fill": 1,
           "id": 94,
           "legend": {
@@ -4005,7 +4005,7 @@
             "min": "#DEDAF7"
           },
           "bars": false,
-          "datasource": "UPA-Elixir-2.0",
+          "datasource": "Deadpool",
           "fill": 1,
           "id": 95,
           "legend": {
@@ -4249,7 +4249,7 @@
             "video_watch_later_controller.index"
           ]
         },
-        "datasource": "UPA-Elixir-2.0",
+        "datasource": "Deadpool",
         "hide": 0,
         "includeAll": false,
         "label": "Actions",
@@ -4272,7 +4272,7 @@
           "text": "oauth2",
           "value": "oauth2"
         },
-        "datasource": "UPA-Elixir-2.0",
+        "datasource": "Deadpool",
         "hide": 2,
         "includeAll": false,
         "label": "External Services",
@@ -4295,7 +4295,7 @@
           "text": "400",
           "value": "400"
         },
-        "datasource": "UPA-Elixir-2.0",
+        "datasource": "Deadpool",
         "hide": 2,
         "includeAll": false,
         "label": "HTTP Error",
@@ -4318,7 +4318,7 @@
           "text": "10.131.230.204",
           "value": "10.131.230.204"
         },
-        "datasource": "UPA-Elixir-2.0",
+        "datasource": "Deadpool",
         "hide": 2,
         "includeAll": false,
         "label": "Servers",
