@@ -31,7 +31,7 @@ defmodule Metrics.Mixfile do
   defp deps do
     [{:gen_stage, "~> 0.11"},
      {:lager, ">= 3.2.1", override: true},
-     {:poison, "~> 3.0"},
+     {:poison, "~> 2.2"},
      {:exometer_core, "~> 1.4.0"}]
   end
 end
