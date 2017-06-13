@@ -59,8 +59,8 @@ defmodule ElixirMetrics.UDPReporter do
 
   defp default_data(data_point, value) do
     %{
-      "client": Application.get_env(:metrics, :app_name),
-      "owner": Application.get_env(:metrics, :owner),
+      "client": Application.get_env(:elixir_metrics, :app_name),
+      "owner": Application.get_env(:elixir_metrics, :owner),
       "data_point": data_point |> format_data_point,
       "value": value,
       "timestamp": :os.system_time(:milli_seconds),

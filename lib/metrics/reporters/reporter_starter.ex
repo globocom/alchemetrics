@@ -5,7 +5,7 @@ defmodule ElixirMetrics.ReporterStarter do
   end
 
   def init(:ok) do
-    reporter_list = Application.get_env :metrics, :reporter_list, []
+    reporter_list = Application.get_env :elixir_metrics, :reporter_list, []
     reporter_list
     |> Enum.each(fn(reporter) ->
       :exometer_report.add_reporter(reporter[:module], reporter[:opts])

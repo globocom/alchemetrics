@@ -17,7 +17,7 @@ defmodule ElixirMetrics.MetricBackend do
 
   defp ensure_subscribed(%ElixirMetrics.Metric{} = metric) do
     reporters = :exometer_report.list_reporters
-    report_interval = Application.get_env(:metrics, :report_interval) || metric.report_interval
+    report_interval = Application.get_env(:elixir_metrics, :report_interval) || metric.report_interval
     datapoints = metric_datapoints(metric)
 
     Enum.each(reporters, fn({reporter, _}) ->

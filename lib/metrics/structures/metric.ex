@@ -9,7 +9,7 @@ defmodule ElixirMetrics.Metric do
   defp format_name(%ElixirMetrics.Event{} = event), do: [event.type, event.metric, event.action |> to_scope |> to_string]
 
   defp user_data do
-    case Application.get_env(:metrics, :user_data, []) do
+    case Application.get_env(:elixir_metrics, :user_data, []) do
       [] ->
         nil
       user_data when is_list(user_data) ->
