@@ -23,7 +23,7 @@ defmodule ElixirMetrics.UDPReporter do
     case :gen_udp.send(state[:socket], String.to_char_list(state[:hostname]), state[:port], Poison.encode!(data)) do
       :ok ->
         Logger.debug("Reporting to #{state[:hostname]}:#{state[:port]} => #{inspect data}")
-        {:ok, state};
+        {:ok, state}
       {:error, reason} ->
         Logger.error("Unable to write metric. #{reason}")
         {:ok, state}
