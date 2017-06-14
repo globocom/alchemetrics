@@ -32,6 +32,7 @@ defmodule ElixirMetrics.Mixfile do
     [{:gen_stage, "~> 0.11"},
      {:lager, ">= 3.2.1", override: true},
      {:poison, "~> 2.2"},
+     {:plug, "~> 1.3"},
      {:exometer_core, "~> 1.4.0"}]
   end
 end
