@@ -1,5 +1,6 @@
+<h1 align="center">Alchemetrics</h1>
+
 <p align="center">
-  <h1 align="center">Alchemetrics</h1>
   <img alt="Playkit" src="https://cdn.pixabay.com/photo/2014/12/22/00/01/poison-576608_960_720.png" width="128">
 </p>
 
