@@ -1,7 +1,7 @@
 <h1 align="center">Alchemetrics</h1>
 
 <p align="center">
-  <img alt="Playkit" src="https://cdn.pixabay.com/photo/2014/12/22/00/01/poison-576608_960_720.png" width="128">
+  <img alt="Playkit" src="https://github.com/globocom/alchemetrics/blob/master/assets/alchemetrics.png?raw=true" width="128">
 </p>
 
 <p align="center">
