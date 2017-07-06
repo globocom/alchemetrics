@@ -1,39 +1,38 @@
 defmodule Alchemetrics.MetricBackend do
-  def update(%Alchemetrics.Metric{} = metric) do
+  @default_report_interval 10_000
+
+  def update(%Alchemetrics.Metric{name: name, value: value} = metric) do
     ensure_created_and_subscribed(metric)
-    :exometer.update(metric.name, metric.value)
+    :exometer.update(name, value)
   end
 
-  defp ensure_created_and_subscribed(%Alchemetrics.Metric{} = metric) do
-    if(metric_undefined?(metric)) do
+  defp ensure_created_and_subscribed(%Alchemetrics.Metric{name: name, scope: _scope} = metric) do
+    if(metric_undefined?(name)) do
       create(metric)
       ensure_subscribed(metric)
     end
   end
 
   defp create(%Alchemetrics.Metric{} = metric) do
-    :exometer.new(metric.name, metric.scope, [time_span: metric.report_interval])
+    :exometer.new(metric.name, metric.scope, [time_span: report_interval, __alchemetrics__: %{metadata: metric.metadata, custom_data: metric.custom_data}])
   end
 
-  defp ensure_subscribed(%Alchemetrics.Metric{} = metric) do
+  defp ensure_subscribed(%Alchemetrics.Metric{name: name, datapoints: datapoints} = metric) do
     reporters = :exometer_report.list_reporters
-    report_interval = Application.get_env(:alchemetrics, :report_interval) || metric.report_interval
-    datapoints = metric_datapoints(metric)
 
     Enum.each(reporters, fn({reporter, _}) ->
-      :exometer_report.subscribe(reporter, metric.name, datapoints, report_interval)
+      :exometer_report.subscribe(reporter, name, datapoints, report_interval)
     end)
   end
 
-  defp metric_undefined?(%Alchemetrics.Metric{} = metric) do
-    case :exometer.info(metric.name) do
+  defp metric_undefined?(name) do
+    case :exometer.info(name) do
       :undefined -> true
       _ -> false
     end
   end
 
-  defp metric_datapoints(%Alchemetrics.Metric{} = metric) do
-    metric.name
-    |> :exometer.info(:datapoints)
+  defp report_interval do
+    Application.get_env(:alchemetrics, :report_interval) || @default_report_interval
   end
 end

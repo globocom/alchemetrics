@@ -1,6 +1,6 @@
 defmodule Alchemetrics.Event do
-  @enforce_keys [:name, :type, :scope]
-  defstruct [metric: nil, type: nil, action: nil, value: 1, default_data: %{}]
+  @enforce_keys [:name, :metrics]
+  defstruct [:name, :metrics, value: 1, metadata: %{}]
 
   def create(opts \\ %{}) do
     struct(__MODULE__, opts)

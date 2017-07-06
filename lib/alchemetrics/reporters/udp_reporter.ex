@@ -15,10 +15,10 @@ defmodule Alchemetrics.UDPReporter do
     end
   end
 
-  def exometer_report(metric, data_point, _extra, value, state) do
+  def exometer_report([name, _scope] = metric, data_point, _extra, value, state) do
     data = default_data(data_point, value)
-    |> Map.merge(metric_data(metric))
-    |> Map.merge(user_extra_data(metric))
+    |> Map.merge(extra_data(metric))
+    |> Map.put(:name, name)
 
     case :gen_udp.send(state[:socket], String.to_char_list(state[:hostname]), state[:port], Poison.encode!(data)) do
       :ok ->
@@ -30,31 +30,16 @@ defmodule Alchemetrics.UDPReporter do
     end
   end
 
-  def user_extra_data(_metric) do
-    %{}
-  end
-
-  defp metric_data(["controller" = type, name, scope]) do
-    %{
-      "type": type,
-      "name": name |> to_string |> String.replace("/", "."),
-      "scope": scope
-    }
-  end
-
-  defp metric_data([type, name, scope]) do
-    %{
-      "type": type,
-      "name": name,
-      "scope": scope
-    }
-  end
-
-  defp metric_data([name, scope]) do
-    %{
-      "name": name,
-      "scope": scope
-    }
+  defp extra_data(metric) do
+    metric
+    |> :exometer.info
+    |> Keyword.get(:options, [])
+    |> Keyword.get(:__alchemetrics__, %{})
+    |> case do
+      %{metadata: metadata, custom_data: custom_data} ->
+        Map.merge(custom_data, metadata)
+      _ -> %{}
+    end
   end
 
   defp default_data(data_point, value) do
