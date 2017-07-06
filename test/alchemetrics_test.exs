@@ -1,6 +1,6 @@
-defmodule MetricsTest do
+defmodule AlchemetricsTest do
   use ExUnit.Case
-  doctest Metrics
+  doctest Alchemetrics
 
   test "the truth" do
     assert 1 + 1 == 2
