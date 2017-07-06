@@ -1,4 +1,4 @@
-defmodule Alchemetrics.Mixfile do
+ defmodule Alchemetrics.Mixfile do
   use Mix.Project
 
   @description """
@@ -50,13 +50,14 @@ defmodule Alchemetrics.Mixfile do
      {:lager, ">= 3.0.0"},
      {:poison, "~> 2.2"},
      {:plug, "~> 1.3"},
-     {:exometer_core, "~> 1.4.0"}]
+     {:exometer_core, "~> 1.4.0"},
+     {:ex_doc, ">= 0.0.0", only: :dev},]
   end
 
-    defp package do
-     [files: ["config", "lib", "mix.exs", "mix.lock", "README.md", "LICENSE"],
-      maintainers: ["Globo.com"],
-      licenses: ["MIT"],
-      links: %{"GitHub" => @project_url},]
+  defp package do
+    [files: ["config", "lib", "mix.exs", "mix.lock", "README.md", "LICENSE"],
+     maintainers: ["Globo.com"],
+     licenses: ["MIT"],
+     links: %{"GitHub" => @project_url},]
   end
 end
