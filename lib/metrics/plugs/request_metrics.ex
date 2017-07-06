@@ -1,4 +1,4 @@
-defmodule ElixirMetrics.Plugs.RequestMetrics do
+defmodule Alchemetrics.Plugs.RequestMetrics do
   @behaviour Plug
 
   def init(opts), do: opts
@@ -7,8 +7,8 @@ defmodule ElixirMetrics.Plugs.RequestMetrics do
     Plug.Conn.register_before_send conn, fn conn ->
       request_duration = calculate_total_request_time(conn)
 
-      ElixirMetrics.count("controller", metric_name_for(conn))
-      ElixirMetrics.measure_time("controller", metric_name_for(conn), request_duration)
+      Alchemetrics.count("controller", metric_name_for(conn))
+      Alchemetrics.measure_time("controller", metric_name_for(conn), request_duration)
 
       conn
     end

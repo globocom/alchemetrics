@@ -1,4 +1,4 @@
-defmodule ElixirMetrics.Event do
+defmodule Alchemetrics.Event do
   @enforce_keys [:name, :type, :scope]
   defstruct [metric: nil, type: nil, action: nil, value: 1, default_data: %{}]
 

@@ -1,7 +1,7 @@
-defmodule ElixirMetrics.InstrumentedFunctionList do
+defmodule Alchemetrics.InstrumentedFunctionList do
   @function_list_tag :instrumented_functions
 
-  alias ElixirMetrics.Function
+  alias Alchemetrics.Function
 
   def track_module(module) do
     Module.register_attribute(module, @function_list_tag, accumulate: true)

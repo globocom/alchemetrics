@@ -1,8 +1,8 @@
-defmodule ElixirMetrics.EctoLogger do
+defmodule Alchemetrics.EctoLogger do
   def record_metric(entry) do
-    ElixirMetrics.measure_time("database", "query_time", entry.query_time |> to_microseconds)
-    ElixirMetrics.measure_time("database", "queue_time", entry.query_time |> to_microseconds)
-    ElixirMetrics.count("database", "query_count")
+    Alchemetrics.measure_time("database", "query_time", entry.query_time |> to_microseconds)
+    Alchemetrics.measure_time("database", "queue_time", entry.query_time |> to_microseconds)
+    Alchemetrics.count("database", "query_count")
   end
 
   defp to_microseconds(value) do

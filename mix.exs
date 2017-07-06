@@ -1,8 +1,8 @@
-defmodule ElixirMetrics.Mixfile do
+defmodule Alchemetrics.Mixfile do
   use Mix.Project
 
   def project do
-    [app: :elixir_metrics,
+    [app: :alchemetrics,
      version: "0.1.0",
      elixir: "~> 1.4",
      build_embedded: Mix.env == :prod,
@@ -16,7 +16,7 @@ defmodule ElixirMetrics.Mixfile do
   def application do
     # Specify extra applications you'll use from Erlang/Elixir
     [extra_applications: [:logger, :exometer_core, :poison],
-     mod: {ElixirMetrics.Application, []}]
+     mod: {Alchemetrics.Application, []}]
   end
 
   # Dependencies can be Hex packages:

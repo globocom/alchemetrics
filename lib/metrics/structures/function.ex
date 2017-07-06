@@ -1,6 +1,6 @@
-defmodule ElixirMetrics.Function do
-  alias ElixirMetrics.InstrumentedFunctionList
-  alias ElixirMetrics.Function
+defmodule Alchemetrics.Function do
+  alias Alchemetrics.InstrumentedFunctionList
+  alias Alchemetrics.Function
 
   defstruct [:env, :module, :kind, :name, :arity, :args, :guards, :body]
 

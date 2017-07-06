@@ -1,4 +1,4 @@
-defmodule ElixirMetrics.Plugs.TimeTracker do
+defmodule Alchemetrics.Plugs.TimeTracker do
   @moduledoc false
 
   import Plug.Conn

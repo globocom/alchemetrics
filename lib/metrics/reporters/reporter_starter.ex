@@ -1,11 +1,11 @@
-defmodule ElixirMetrics.ReporterStarter do
+defmodule Alchemetrics.ReporterStarter do
   use GenStage
   def start_link do
     GenServer.start_link(__MODULE__, :ok, name: __MODULE__)
   end
 
   def init(:ok) do
-    reporter_list = Application.get_env :elixir_metrics, :reporter_list, []
+    reporter_list = Application.get_env :alchemetrics, :reporter_list, []
     reporter_list
     |> Enum.each(fn(reporter) ->
       :exometer_report.add_reporter(reporter[:module], reporter[:opts])

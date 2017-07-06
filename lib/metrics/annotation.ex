@@ -1,6 +1,6 @@
-defmodule ElixirMetrics.Annotation do
-  alias ElixirMetrics.InstrumentedFunctionList
-  alias ElixirMetrics.Function
+defmodule Alchemetrics.Annotation do
+  alias Alchemetrics.InstrumentedFunctionList
+  alias Alchemetrics.Function
 
   # Example
   # @metric scope: "gen_stage", type: "discarded", measure: [:function_calls, :function_time]
@@ -9,13 +9,13 @@ defmodule ElixirMetrics.Annotation do
   defmacro __using__(_options) do
     quote do
       InstrumentedFunctionList.track_module(__MODULE__)
-      @before_compile ElixirMetrics.Annotation
-      @on_definition ElixirMetrics.Annotation
+      @before_compile Alchemetrics.Annotation
+      @on_definition Alchemetrics.Annotation
     end
   end
 
   def __on_definition__(env, kind, name, args, guards, body) do
-    function = ElixirMetrics.Function.new(env, kind, name, args, guards, body)
+    function = Alchemetrics.Function.new(env, kind, name, args, guards, body)
     if Function.has_metric_tag?(function) || Function.similar_functions_marked_for_instrumentation?(function) do
       Function.mark_for_instrumentation(function)
     end
