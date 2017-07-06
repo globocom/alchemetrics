@@ -1,6 +1,25 @@
-# Metrics
+<p align="center">
+  <h1 align="center">Alchemetrics</h1>
+  <img alt="Playkit" src="https://cdn.pixabay.com/photo/2014/12/22/00/01/poison-576608_960_720.png" width="128">
+</p>
 
-**TODO: Add description**
+<p align="center">
+  Elixir metrics reporter and collector
+</p>
+
+<p align="center">
+  <a href="https://travis-ci.org/globocom/alchemetrics">
+    <img
+      alt="Travis" src="https://travis-ci.org/globocom/alchemetrics.svg">
+  </a>
+  <a href="">
+    <img
+      alt="Slack"
+      src="https://img.shields.io/badge/slack-%23videos--playkit-blue.svg?style=flat-square">
+  </a>
+</p>
+
+## About
 
 ## Installation
 
