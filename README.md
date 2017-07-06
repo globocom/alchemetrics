@@ -13,11 +13,9 @@
     <img
       alt="Travis" src="https://travis-ci.org/globocom/alchemetrics.svg">
   </a>
-  <a href="">
-    <img
-      alt="Slack"
-      src="https://img.shields.io/badge/slack-%23videos--playkit-blue.svg?style=flat-square">
-  </a>
+  <img
+    alt="Hex"
+    src="https://img.shields.io/hexpm/dt/alchemetrics.svg">
 </p>
 
 ## About
