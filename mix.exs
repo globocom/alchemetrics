@@ -50,7 +50,7 @@
      {:lager, ">= 3.0.0"},
      {:poison, "~> 2.2"},
      {:plug, "~> 1.3"},
-     {:exometer_core, "~> 1.4.0"},
+     {:exometer_core, "~> 1.0", hex: :basho_exometer_core},
      {:ex_doc, ">= 0.0.0", only: :dev},]
   end
 
