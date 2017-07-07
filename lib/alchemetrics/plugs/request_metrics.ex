@@ -7,9 +7,8 @@ defmodule Alchemetrics.Plugs.RequestMetrics do
     Plug.Conn.register_before_send conn, fn conn ->
       request_duration = calculate_total_request_time(conn)
 
-      Alchemetrics.count("controller", metric_name_for(conn))
-      Alchemetrics.measure_time("controller", metric_name_for(conn), request_duration)
-
+      Alchemetrics.count(metric_name_for(conn), %{metadata: %{type: "controller"}})
+      Alchemetrics.report(metric_name_for(conn), request_duration, %{metrics: [:p99, :p95, :avg], metadata: %{type: "controller"}})
       conn
     end
   end
@@ -23,7 +22,7 @@ defmodule Alchemetrics.Plugs.RequestMetrics do
 
   defp metric_name_for(conn) do
     controller = Phoenix.Controller.controller_module conn
-    "#{standardize_controller_name(controller)}/#{Phoenix.Controller.action_name conn}"
+    "#{standardize_controller_name(controller)}.#{Phoenix.Controller.action_name conn}"
   end
 
   defp standardize_controller_name(controller) do

@@ -2,23 +2,28 @@ defmodule Alchemetrics do
   alias Alchemetrics.Event
   alias Alchemetrics.Producer
 
-  def count(type, metric) when is_bitstring(type) and is_bitstring(metric) do
-    Event.create(%{type: type, metric: metric, action: :count})
+  @default_options %{
+    metadata: %{},
+    metrics: [:last_interval],
+  }
+
+  def report(metric_name, value, %{} = options) when is_bitstring(metric_name) and is_number(value) do
+    %{metadata: metadata, metrics: metrics} = Map.merge(@default_options, options)
+    Event.create(%{name: metric_name, value: value, metrics: metrics, metadata: metadata})
     |> Producer.enqueue
   end
-  def count(_type, _metric), do: raise ArgumentError, message: "Arguments 'metric' and 'type' must be strings"
+  def report(_metric_name, _value, _options), do: raise ArgumentError, message: "'metric_name' must be string and 'value' must be number or function"
 
-  def measure_time(type, metric, value) when is_bitstring(type) and is_bitstring(metric) do
-    Event.create(%{type: type, metric: metric, action: :measure_time, value: value})
-    |> Producer.enqueue
+  defmacro report_time(metric_name, options, function_body) when is_bitstring(metric_name) do
+    quote do
+      {total_time, result} = :timer.tc(fn -> unquote(function_body) |> Keyword.get(:do) end)
+      report(unquote(metric_name), total_time, unquote(options))
+      result
+    end
   end
-  def measure_time(_type, _metric), do: raise ArgumentError, message: "Arguments 'metric' and 'type' must be strings"
 
-  def instrument_function(type, metric, function) when is_bitstring(type) and is_bitstring(metric) do
-    {total_time, result} = :timer.tc(fn -> function.() end)
-    count(type, metric)
-    measure_time(type, metric, total_time)
-    result
+  def count(metric_name, %{metadata: metadata}) when is_bitstring(metric_name) do
+    report(metric_name, 1, %{metrics: [:total, :last_interval], metadata: metadata})
   end
-  def instrument_function(_type, _metric, _functions), do: raise ArgumentError, message: "Arguments 'metric' and 'type' must be strings"
+  def count(_metric_name, _options), do: raise ArgumentError, message: "'metric_name' must be string"
 end

@@ -6,7 +6,7 @@ defmodule Alchemetrics.Handler do
   def start_link(%Event{} = event) do
     Task.start_link(fn ->
       Metric.from_event(event)
-      |> MetricBackend.update
+      |> Enum.each(&MetricBackend.update/1)
     end)
   end
 end
