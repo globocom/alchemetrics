@@ -14,7 +14,7 @@ defmodule Alchemetrics.MetricBackend do
   end
 
   defp create(%Alchemetrics.Metric{} = metric) do
-    :exometer.new(metric.name, metric.scope, [time_span: report_interval, __alchemetrics__: %{metadata: metric.metadata, custom_data: metric.custom_data}])
+    :exometer.new(metric.name, metric.scope, [time_span: report_interval, __alchemetrics__: %{metadata: metric.metadata}])
   end
 
   defp ensure_subscribed(%Alchemetrics.Metric{name: name, datapoints: datapoints} = metric) do
