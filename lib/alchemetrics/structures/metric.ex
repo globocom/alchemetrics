@@ -10,7 +10,7 @@ defmodule Alchemetrics.Metric do
 
   @enforce_keys [:scope, :name, :value]
 
-  defstruct [:scope, :datapoints, :name, :value, custom_data: %{}, metadata: %{}]
+  defstruct [:scope, :datapoints, :name, :value, metadata: %{}]
 
   def from_event(%Alchemetrics.Event{name: name, metrics: metrics, value: value, metadata: metadata} = event) do
     validate_metrics(metrics)
@@ -18,24 +18,22 @@ defmodule Alchemetrics.Metric do
     metrics
     |> scopes_for
     |> Enum.map(fn scope ->
-      %Alchemetrics.Metric{name: [name, scope], datapoints: datapoints_for(scope, metrics), scope: scope, value: value, custom_data: custom_data(), metadata: metadata}
+      %Alchemetrics.Metric{name: [name, scope], datapoints: datapoints_for(scope, metrics), scope: scope, value: value, metadata: metadata}
     end)
+  end
+
+  def metric_from_scope(scope, datapoint) do
+    case Enum.find(@metrics, fn({_, d}) -> d == {scope, datapoint} end) do
+      nil -> nil
+      {metric, _} -> metric
+      _ -> nil
+    end
   end
 
   defp datapoints_for(scope, metrics) do
     @metrics
     |> Enum.filter(fn {metric, {metric_scope, _}} -> scope == metric_scope && Enum.member?(metrics, metric) end)
     |> Enum.map(fn {_, {_, datapoint}} -> datapoint end)
-  end
-
-  defp custom_data do
-    case Application.get_env(:alchemetrics, :custom_data, %{}) do
-      data when is_list(data) ->
-        Enum.into(data, %{})
-      data when is_map(data) -> data
-      data ->
-        raise ArgumentError, message: "Invalid parameter 'custom_data' #{inspect data}. Must be a KeywordList"
-    end
   end
 
   defp validate_metrics(metrics) do

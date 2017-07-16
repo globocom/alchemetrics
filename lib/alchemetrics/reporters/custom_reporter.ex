@@ -32,9 +32,28 @@ defmodule Alchemetrics.CustomReporter do
         {:ok, options}
       end
 
-      def exometer_report(metric_name, data_point, _extra, value, options) do
-        __MODULE__.report(metric_name, data_point, value, options)
+      def exometer_report([public_name, scope] = metric_name, data_point, _extra, value, options) do
+        options = Keyword.put(options, :metadata, metadata_for(metric_name))
+        metric = Alchemetrics.Metric.metric_from_scope(scope, data_point)
+
+        __MODULE__.report(public_name, metric, value, options)
         {:ok, options}
+      end
+
+      def disable, do: :exometer_report.disable_reporter(__MODULE__)
+
+      defp metadata_for(metric_name) do
+        metric_name
+        |> alchemetrics_data
+        |> Map.get(:metadata)
+        |> Enum.into([])
+      end
+
+      defp alchemetrics_data(metric_name) do
+        metric_name
+        |> :exometer.info
+        |> Keyword.get(:options)
+        |> Keyword.get(:__alchemetrics__)
       end
 
       def exometer_subscribe(_, _, _, _, opts), do: {:ok, opts}
