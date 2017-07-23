@@ -7,7 +7,7 @@ defmodule Alchemetrics do
     metrics: [:last_interval],
   }
 
-  def report(metric_name, value, %{} = options) when is_bitstring(metric_name) and is_number(value) do
+  def report(metric_name, value, options \\ %{}) when is_bitstring(metric_name) and is_number(value) and is_map(options) do
     %{metadata: metadata, metrics: metrics} = Map.merge(@default_options, options)
     Event.create(%{name: metric_name, value: value, metrics: metrics, metadata: metadata})
     |> Producer.enqueue
