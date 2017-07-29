@@ -4,7 +4,7 @@ defmodule Alchemetrics.ProducerStateTest do
   alias Alchemetrics.ProducerState
   alias Alchemetrics.Event
 
-  @event Event.create
+  @event Event.create(%{name: "some_event", metrics: [:p99]})
   @empty_state %ProducerState{}
 
   describe "#store_event" do
