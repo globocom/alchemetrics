@@ -18,6 +18,7 @@
       source_url: @project_url,
       homepage_url: @project_url,
       package: package(),
+      test_coverage: [tool: ExCoveralls],
       name: "Alchemetrics",
       docs: [
         main: "Alchemetrics",
@@ -46,12 +47,15 @@
   #
   # Type "mix help deps" for more examples and options
   defp deps do
-    [{:gen_stage, "~> 0.11"},
-     {:lager, ">= 3.0.0"},
-     {:poison, "~> 2.2"},
-     {:plug, "~> 1.3"},
-     {:exometer_core, "~> 1.0", hex: :basho_exometer_core},
-     {:ex_doc, ">= 0.0.0", only: :dev},]
+    [
+      {:gen_stage, "~> 0.11"},
+      {:lager, ">= 3.0.0"},
+      {:poison, "~> 2.2"},
+      {:plug, "~> 1.3"},
+      {:exometer_core, "~> 1.0", hex: :basho_exometer_core},
+      {:ex_doc, ">= 0.0.0", only: :dev},
+      {:excoveralls, "~> 0.7", only: :test}
+    ]
   end
 
   defp package do
