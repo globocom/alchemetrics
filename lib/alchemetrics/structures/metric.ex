@@ -39,15 +39,11 @@ defmodule Alchemetrics.Metric do
   defp validate_metrics(metrics) do
     metrics
     |> Enum.all?(&is_metric/1)
-    |> check_valid_metrics
   end
 
-  defp check_valid_metrics(true), do: nil
-  defp check_valid_metrics(false),
-    do: raise "'metrics' parameter must be one of: #{inspect Map.keys(@metrics)}"
-
   defp is_metric(metric) do
-    Map.has_key?(@metrics, metric)
+    if !Map.has_key?(@metrics, metric),
+      do: raise ArgumentError, message: "Invalid metric #{inspect metric}. The parameter 'metrics' must be one of: #{inspect Map.keys(@metrics)}"
   end
 
   defp scopes_for(metrics) do
@@ -55,5 +51,4 @@ defmodule Alchemetrics.Metric do
     |> Enum.map(&(elem(@metrics[&1], 0)))
     |> Enum.uniq
   end
-
 end
