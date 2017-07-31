@@ -44,5 +44,17 @@ defmodule Alchemetrics.EventTest do
         Event.create(%{name: "some_event", metrics: "some_invalid_metric"})
       end
     end
+
+    test "raise ArgumentError if the value is not a number" do
+      assert_raise ArgumentError, fn ->
+        Event.create(%{name: "some_event", metrics: [:p99], value: "one"})
+      end
+    end
+
+    test "raise ArgumentError if metadata is not a map" do
+      assert_raise ArgumentError, fn ->
+        Event.create(%{name: "some_event", metrics: [:p99], metadata: [invalid: true]})
+      end
+    end
   end
 end
