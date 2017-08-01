@@ -33,7 +33,7 @@
   # Type "mix help compile.app" for more information
   def application do
     # Specify extra applications you'll use from Erlang/Elixir
-    [extra_applications: [:logger, :exometer_core, :poison],
+    [extra_applications: [:logger, :exometer_core],
      mod: {Alchemetrics.Application, []}]
   end
 
@@ -50,7 +50,6 @@
     [
       {:gen_stage, "~> 0.11"},
       {:lager, ">= 3.0.0"},
-      {:poison, "~> 2.2"},
       {:plug, "~> 1.3"},
       {:exometer_core, "~> 1.0", hex: :basho_exometer_core},
       {:ex_doc, ">= 0.0.0", only: :dev},
