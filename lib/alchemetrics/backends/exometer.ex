@@ -14,7 +14,11 @@ defmodule Alchemetrics.Backends.Exometer do
   end
 
   defp create(%Alchemetrics.Metric{} = metric) do
-    :exometer.new(metric.name, metric.scope, [time_span: report_interval, __alchemetrics__: %{metadata: metric.metadata}])
+    try do
+      :exometer.new(metric.name, metric.scope, [time_span: report_interval, __alchemetrics__: %{metadata: metric.metadata}])
+    rescue
+      ErlangError -> :ok
+    end
   end
 
   defp ensure_subscribed(%Alchemetrics.Metric{name: name, datapoints: datapoints} = metric) do
