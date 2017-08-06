@@ -76,3 +76,26 @@ iex(2)> Alchemetrics.report("my_metric", 1000)
 :ok
 iex(3)> I am called every time a metric is sent from this reporter! my_metric | last_interval | 1000 | [metadata: [], owner: "my_team"]
 ```
+
+## Concepts
+### Reports
+A report is an event that happens when a Reporter sends the data to its destination. For Alchmetrics, it consists of a name, a metric, and a value.
+
+The name is anything that makes sense. It may be something to indicate that the metric in question represents the number of queries in the database or the response time of a certain action, for example.
+
+The metric is the type of calculation that was done on the collected data, for example the average or the sum of the values collected in the last interval.
+
+Finally, the value is the result of the calculation made on the database, according to the metric.
+
+In the following example, we are reporting two types of metric: one that calculates the average (`:avg`) and another the sum of all values collected in the last interval (`:last_inteval`). Each line of debug log represents a report.
+
+### Example:
+```
+iex(3)> Alchemetrics.report("my_value", 99, %{metrics: [:avg, :last_interval]})
+:ok
+iex(4)> Alchemetrics.report("my_value", 1, %{metrics: [:avg, :last_interval]})
+:ok
+iex(5)>
+00:26:58.084 [debug] Reporting: %{metric: :avg, name: "my_value", options: [metadata: []], value: 50}
+00:26:58.084 [debug] Reporting: %{metric: :last_interval, name: "my_value", options: [metadata: []], value: 100}
+```
