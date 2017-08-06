@@ -1,5 +1,4 @@
 defmodule Alchemetrics.ReporterStarter do
-  use GenStage
   def start_link do
     GenServer.start_link(__MODULE__, :ok, name: __MODULE__)
   end
@@ -13,7 +12,10 @@ defmodule Alchemetrics.ReporterStarter do
     {:ok, :added}
   end
 
-  def handle_cast({:add_reporter, [module: module, opts: opts]}) do
+  def start_reporter([module: module, opts: opts] = reporter), do: GenServer.cast(__MODULE__, {:add_reporter, reporter})
+
+  def handle_cast({:add_reporter, [module: module, opts: opts]}, state) do
     :exometer_report.add_reporter(module, opts)
+    {:noreply, state}
   end
 end
