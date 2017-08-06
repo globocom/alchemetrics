@@ -45,3 +45,34 @@ iex(2)> Alchemetrics.report("some_metric", 1)
 iex(3)>
 23:21:12.691 [debug] Reporting: %{metric: :last_interval, name: "some_metric", options: [metadata: [], application: "MyApp"], value: 1}
 ```
+
+## Creating your own custom reporters
+A custom reporter is a module that implements a behavior.
+
+It should make use of the `Alchemetrics.CustomReporter.__using__` macro and implement two functions: `init/1` and `report/4`.
+
+```elixir
+## my_app/metrics/my_reporter.ex
+
+defmodule MyApp.Metrics.MyReporter do
+  use Alchemetrics.CustomReporter
+
+  def init(opts) do
+    IO.puts "I'm called once the reporter is started! My options: #{inspect opts}"
+  end
+
+  def report(name, metric, value, opts) do
+    IO.puts "I am called every time a metric is sent from this reporter! #{name} | #{metric} | #{value} | #{inspect opts}"
+  end
+end
+```
+And let's check our reporter at `iex`:
+
+```
+iex(1)> Alchemetrics.ReporterStarter.start_reporter(MyApp.Metrics.MyReporter,  [owner: "my_team"])
+:ok
+I'm called once the reporter is started! My options: [owner: "my_team"]
+iex(2)> Alchemetrics.report("my_metric", 1000)
+:ok
+iex(3)> I am called every time a metric is sent from this reporter! my_metric | last_interval | 1000 | [metadata: [], owner: "my_team"]
+```
