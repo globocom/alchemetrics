@@ -3,29 +3,37 @@ defmodule Alchemetrics.ReporterStarterTest do
   import Mock
 
   @reporter_list [
-    [module: SomeReporter, opts: []],
-    [module: AnotherReporter, opts: [some: "options"]]
+    [module: FakeReporter, opts: [some: "options"]]
   ]
+
+  setup do
+    :exometer_report.remove_reporter(FakeReporter)
+    :ok
+  end
 
   describe "#init" do
     test "starts all reporters on the :reporter_list apllication variable" do
-      with_mocks([
-        {:exometer_report, [], [add_reporter: fn(_, _) -> :ok end]},
-        {Application, [], [get_env: fn(_, _, _) -> @reporter_list end]},
-      ]) do
+      with_mock(Application, [get_env: fn(_, _, _) -> @reporter_list end]) do
         Alchemetrics.ReporterStarter.init(:ok)
-        assert called :exometer_report.add_reporter(SomeReporter, [])
-        assert called :exometer_report.add_reporter(AnotherReporter, [some: "options"])
+        assert [{FakeReporter, _}] = :exometer_report.list_reporters
       end
     end
   end
 
   describe "#start_reporter" do
     test "adds a new reporter from given module and options" do
-      with_mock(:exometer_report, [add_reporter: fn(_, _) -> :ok end]) do
-        Alchemetrics.ReporterStarter.start_reporter([module: SomeOtherReporter, opts: []])
-        assert called :exometer_report.add_reporter(SomeOtherReporter, [])
-      end
+      Alchemetrics.ReporterStarter.start_reporter([module: FakeReporter, opts: []])
+      :timer.sleep 1
+      assert [{FakeReporter, _}] = :exometer_report.list_reporters
     end
   end
+end
+
+# We need this because :exometer_reporter.add_reporter crashes if
+# it is called with an invalid module that does not implements
+# exometer_report behaviour
+defmodule FakeReporter do
+  use Alchemetrics.CustomReporter
+  def init(_), do: nil
+  def report(_), do: nil
 end
