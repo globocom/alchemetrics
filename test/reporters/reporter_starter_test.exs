@@ -22,7 +22,7 @@ defmodule Alchemetrics.ReporterStarterTest do
 
   describe "#start_reporter" do
     test "adds a new reporter from given module and options" do
-      Alchemetrics.ReporterStarter.start_reporter([module: FakeReporter, opts: []])
+      Alchemetrics.ReporterStarter.start_reporter(FakeReporter, [])
       :timer.sleep 1
       assert [{FakeReporter, _}] = :exometer_report.list_reporters
     end

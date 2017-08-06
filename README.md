@@ -29,14 +29,14 @@ Each metric report creates a new event that follows the GenStage flow. With the 
 
 The maximum number of processes is a configurable parameter. With more processes, the accuracy of values is higher, but the performance impact will also be greater.
 
-## Checking if everything works
+## Debugging
 Alchemetrics comes with a reporter called Alchemetrics.LoggerReporter, which just write all the stuff it receives into debug logs. It can be useful to visualize how reporters are receiving metrics from your application.
 
 Please note that Alchemetrics allows multiple reporters to be used at the same time and each of them will receive the metrics in the same way.
 
 ### Example:
 ```
-iex(1)> Alchemetrics.ReporterStarter.start_reporter([module: Alchemetrics.LoggerReporter, opts: [application: "MyApp"]])
+iex(1)> Alchemetrics.ReporterStarter.start_reporter(Alchemetrics.LoggerReporter, [application: "MyApp"])
 :ok
 iex(2)>
 23:20:40.695 [debug] Starting Elixir.Alchemetrics.LoggerReporter with following options: [application: "MyApp"]

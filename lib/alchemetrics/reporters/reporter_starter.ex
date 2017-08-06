@@ -12,7 +12,7 @@ defmodule Alchemetrics.ReporterStarter do
     {:ok, :added}
   end
 
-  def start_reporter([module: module, opts: opts] = reporter), do: GenServer.cast(__MODULE__, {:add_reporter, reporter})
+  def start_reporter(module, opts), do: GenServer.cast(__MODULE__, {:add_reporter, [module: module, opts: opts]})
 
   def handle_cast({:add_reporter, [module: module, opts: opts]}, state) do
     :exometer_report.add_reporter(module, opts)
