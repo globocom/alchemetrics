@@ -10,12 +10,11 @@
 
 <p align="center">
   <a href="https://travis-ci.org/globocom/alchemetrics">
-    <img
-      alt="Travis" src="https://travis-ci.org/globocom/alchemetrics.svg">
+    <img alt="Travis" src="https://travis-ci.org/globocom/alchemetrics.svg">
   </a>
-  <img
-    alt="Hex"
-    src="https://hex.pm/packages/alchemetrics">
+  <a href="https://hex.pm/packages/alchemetrics">
+    <img alt="Hex" src="https://img.shields.io/hexpm/dt/alchemetrics.svg">
+  </a>
 </p>
 
 ## About
