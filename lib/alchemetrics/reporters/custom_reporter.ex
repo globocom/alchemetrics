@@ -28,7 +28,7 @@ defmodule Alchemetrics.CustomReporter do
       @behaviour Alchemetrics.CustomReporter
 
       def exometer_init(options) do
-        __MODULE__.init(options)
+        options = __MODULE__.init(options) |> Enum.into([])
         {:ok, options}
       end
 
@@ -39,6 +39,7 @@ defmodule Alchemetrics.CustomReporter do
         __MODULE__.report(public_name, metric, value, options)
         {:ok, options}
       end
+
 
       def disable, do: :exometer_report.disable_reporter(__MODULE__)
 
