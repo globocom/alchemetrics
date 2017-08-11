@@ -23,7 +23,7 @@ defmodule Alchemetrics.ReporterStarterTest do
   describe "#start_reporter" do
     test "adds a new reporter from given module and options" do
       Alchemetrics.ReporterStarter.start_reporter(FakeReporter, [])
-      :timer.sleep 1
+      :timer.sleep 10
       assert [{FakeReporter, _}] = :exometer_report.list_reporters
     end
   end
@@ -34,6 +34,6 @@ end
 # exometer_report behaviour
 defmodule FakeReporter do
   use Alchemetrics.CustomReporter
-  def init(_), do: nil
-  def report(_), do: nil
+  def init(_), do: []
+  def report(_), do: []
 end
