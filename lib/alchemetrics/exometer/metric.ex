@@ -1,4 +1,4 @@
-defmodule Alchemetrics.Metric do
+defmodule Alchemetrics.Exometer.Metric do
 
   @default_metrics %{
     p99: {:histogram, 99},
@@ -30,7 +30,7 @@ defstruct [:scope, :datapoints, :name, :value, metadata: %{}]
     metrics
     |> scopes_for
     |> Enum.map(fn scope ->
-      %Alchemetrics.Metric{name: [name, scope], datapoints: datapoints_for(scope, metrics), scope: scope, value: value, metadata: metadata}
+      %Alchemetrics.Exometer.Metric{name: [name, scope], datapoints: datapoints_for(scope, metrics), scope: scope, value: value, metadata: metadata}
     end)
   end
 

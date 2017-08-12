@@ -1,7 +1,7 @@
 defmodule Alchemetrics.Exometer do
   @default_report_interval 10_000
 
-  def update(%Alchemetrics.Metric{name: name, value: value} = metric) do
+  def update(%Alchemetrics.Exometer.Metric{name: name, value: value} = metric) do
     ensure_created_and_subscribed(metric)
     :exometer.update(name, value)
   end
@@ -13,7 +13,7 @@ defmodule Alchemetrics.Exometer do
     end
   end
 
-  defp create(%Alchemetrics.Metric{} = metric) do
+  defp create(%Alchemetrics.Exometer.Metric{} = metric) do
     try do
       :exometer.new(metric.name, metric.scope, [time_span: report_interval, __alchemetrics__: %{metadata: metric.metadata}])
     rescue
@@ -21,7 +21,7 @@ defmodule Alchemetrics.Exometer do
     end
   end
 
-  defp ensure_subscribed(%Alchemetrics.Metric{name: name, datapoints: datapoints} = metric) do
+  defp ensure_subscribed(%Alchemetrics.Exometer.Metric{name: name, datapoints: datapoints} = metric) do
     reporters = :exometer_report.list_reporters
 
     Enum.each(reporters, fn({reporter, _}) ->

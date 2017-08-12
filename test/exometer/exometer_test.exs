@@ -4,7 +4,7 @@ defmodule Alchemetrics.ExometerTest do
 
   alias Alchemetrics.Exometer
 
-  @metric %Alchemetrics.Metric{name: ["my_metric", :spiral], value: 1, scope: :spiral}
+  @metric %Alchemetrics.Exometer.Metric{name: ["my_metric", :spiral], value: 1, scope: :spiral}
 
   setup do
     :exometer.delete(@metric.name)
