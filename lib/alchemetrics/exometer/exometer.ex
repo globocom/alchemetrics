@@ -1,4 +1,4 @@
-defmodule Alchemetrics.Backends.Exometer do
+defmodule Alchemetrics.Exometer do
   @default_report_interval 10_000
 
   def update(%Alchemetrics.Metric{name: name, value: value} = metric) do

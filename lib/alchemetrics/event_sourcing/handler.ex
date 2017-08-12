@@ -1,7 +1,7 @@
 defmodule Alchemetrics.Handler do
   alias Alchemetrics.Event
   alias Alchemetrics.Metric
-  alias Alchemetrics.Backends.Exometer
+  alias Alchemetrics.Exometer
 
   def start_link(%Event{} = event) do
     Task.start_link(fn ->
