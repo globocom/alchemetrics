@@ -34,7 +34,11 @@ config :lager, [
 ]
 config :lager, :crash_log, false
 
-config :logger, level: :error
+config :logger,
+  level: :error,
+  backends: [:console],
+  handle_otp_reports: true,
+  handle_sasl_reports: true
 
 if Mix.env == :test do
   import_config "#{Mix.env}.exs"
