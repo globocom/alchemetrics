@@ -27,6 +27,15 @@ use Mix.Config
 # Configuration from the imported file will override the ones defined
 # here (which is why it is important to import them last).
 #
-if Mix.env == :test do 
+config :lager, [
+  suppress_application_start_stop: true,
+  suppress_supervisor_start_stop: true,
+  handlers: []
+]
+config :lager, :crash_log, false
+
+config :logger, level: :error
+
+if Mix.env == :test do
   import_config "#{Mix.env}.exs"
 end
