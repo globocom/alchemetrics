@@ -24,7 +24,7 @@ defmodule Alchemetrics.Exometer.Metric do
   
 defstruct [:scope, :datapoints, :name, :value, metadata: %{}]
 
-  def from_event(%Alchemetrics.Event{name: name, metrics: metrics, value: value, metadata: metadata} = event) do
+  def from_event(%Alchemetrics.Event{name: name, metrics: metrics, value: value, metadata: metadata}) do
     validate_metrics(metrics)
 
     metrics
