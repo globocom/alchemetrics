@@ -15,17 +15,17 @@ defmodule Alchemetrics.Exometer do
 
   defp create(%Alchemetrics.Exometer.Metric{} = metric) do
     try do
-      :exometer.new(metric.name, metric.scope, [time_span: report_interval, __alchemetrics__: %{metadata: metric.metadata}])
+      :exometer.new(metric.name, metric.scope, [time_span: report_interval(), __alchemetrics__: %{metadata: metric.metadata}])
     rescue
       ErlangError -> :ok
     end
   end
 
-  defp ensure_subscribed(%Alchemetrics.Exometer.Metric{name: name, datapoints: datapoints} = metric) do
+  defp ensure_subscribed(%Alchemetrics.Exometer.Metric{name: name, datapoints: datapoints}) do
     reporters = :exometer_report.list_reporters
 
     Enum.each(reporters, fn({reporter, _}) ->
-      :exometer_report.subscribe(reporter, name, datapoints, report_interval)
+      :exometer_report.subscribe(reporter, name, datapoints, report_interval())
     end)
   end
 
