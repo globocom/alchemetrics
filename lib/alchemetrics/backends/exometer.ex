@@ -6,7 +6,7 @@ defmodule Alchemetrics.Backends.Exometer do
     :exometer.update(name, value)
   end
 
-  defp ensure_created_and_subscribed(%Alchemetrics.Metric{name: name, scope: _scope} = metric) do
+  def ensure_created_and_subscribed(%Alchemetrics.Metric{name: name, scope: _scope} = metric) do
     if(metric_undefined?(name)) do
       create(metric)
       ensure_subscribed(metric)

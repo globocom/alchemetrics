@@ -6,6 +6,14 @@ defmodule Alchemetrics.Metric do
     avg: {:histogram, :mean},
     total: {:spiral, :count},
     last_interval: {:spiral, :one},
+
+    memory_atom: {:memory, :atom},
+    memory_binary: {:memory, :binary},
+    memory_ets: {:memory, :ets},
+    memory_processes: {:memory, :processes},
+    memory_total: {:memory, :total},
+
+    statistics_runqueue: {:statistics, :run_queue}
   }
 
   @enforce_keys [:scope, :name, :value]

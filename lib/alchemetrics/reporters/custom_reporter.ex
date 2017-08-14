@@ -54,7 +54,7 @@ defmodule Alchemetrics.CustomReporter do
         metric_name
         |> :exometer.info
         |> Keyword.get(:options)
-        |> Keyword.get(:__alchemetrics__)
+        |> Keyword.get(:__alchemetrics__, %{metadata: %{}})
       end
 
       def exometer_subscribe(_, _, _, _, opts), do: {:ok, opts}

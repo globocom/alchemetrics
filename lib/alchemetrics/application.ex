@@ -13,6 +13,7 @@ defmodule Alchemetrics.Application do
       # Starts a worker by calling: Alchemetrics.Worker.start_link(arg1, arg2, arg3)
       # worker(Alchemetrics.Worker, [arg1, arg2, arg3]),
       worker(Alchemetrics.ReporterStarter, []),
+      worker(Alchemetrics.BuiltinMetrics.Beam, []),
       worker(Alchemetrics.Producer, []),
       worker(Alchemetrics.Consumer, []),
     ]
