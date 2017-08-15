@@ -4,6 +4,8 @@ defmodule Alchemetrics.Exometer.Metric do
     p99: {:histogram, 99},
     p95: {:histogram, 95},
     avg: {:histogram, :mean},
+    min: {:histogram, :min},
+    max: {:histogram, :max},
     total: {:spiral, :count},
     last_interval: {:spiral, :one}
   }

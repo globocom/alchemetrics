@@ -4,7 +4,7 @@ defmodule Alchemetrics.MetricTest do
   alias Alchemetrics.Event
   alias Alchemetrics.Exometer.Metric
 
-  @allowed_metrics [:avg, :last_interval, :p95, :p99, :total]
+  @allowed_metrics [:avg, :last_interval, :max, :min, :p95, :p99, :total]
 
   describe "#from_event" do
     test "raises ArgumentError if the user provides an invalid metric" do
