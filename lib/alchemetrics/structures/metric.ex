@@ -1,24 +1,28 @@
 defmodule Alchemetrics.Metric do
 
-  @metrics %{
+  @default_metrics %{
     p99: {:histogram, 99},
     p95: {:histogram, 95},
     avg: {:histogram, :mean},
     total: {:spiral, :count},
-    last_interval: {:spiral, :one},
+    last_interval: {:spiral, :one}
+  }
 
+  @erlang_metrics %{
     memory_atom: {:memory, :atom},
     memory_binary: {:memory, :binary},
     memory_ets: {:memory, :ets},
     memory_processes: {:memory, :processes},
     memory_total: {:memory, :total},
-
     statistics_runqueue: {:statistics, :run_queue}
   }
 
-  @enforce_keys [:scope, :name, :value]
+  @metrics Map.merge(@default_metrics, @erlang_metrics)
+  
 
-  defstruct [:scope, :datapoints, :name, :value, metadata: %{}]
+  @enforce_keys [:scope, :name, :value]
+  
+defstruct [:scope, :datapoints, :name, :value, metadata: %{}]
 
   def from_event(%Alchemetrics.Event{name: name, metrics: metrics, value: value, metadata: metadata} = event) do
     validate_metrics(metrics)
@@ -51,7 +55,7 @@ defmodule Alchemetrics.Metric do
 
   defp is_metric(metric) do
     if !Map.has_key?(@metrics, metric),
-      do: raise ArgumentError, message: "Invalid metric #{inspect metric}. The parameter 'metrics' must be one of: #{inspect Map.keys(@metrics)}"
+      do: raise ArgumentError, message: "Invalid metric #{inspect metric}. The parameter 'metrics' must be one of: #{inspect Map.keys(@default_metrics)}"
   end
 
   defp scopes_for(metrics) do
