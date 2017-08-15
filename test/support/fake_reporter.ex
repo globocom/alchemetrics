@@ -3,6 +3,6 @@
 # exometer_report behaviour
 defmodule FakeReporter do
   use Alchemetrics.CustomReporter
-  def init(_), do: []
-  def report(_), do: []
+  def init(_), do: {:ok, []}
+  def report(_,_,_,_), do: {:ok, []}
 end
