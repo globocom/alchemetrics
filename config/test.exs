@@ -21,10 +21,44 @@ use Mix.Config
 #     config :logger, level: :info
 #
 
+config :alchemetrics, reporter_list: [
+  [module: FakeReporter, opts: [some: "options"]]
+]
+
+polling_interval = 5_000
+memory_stats     = ~w(atom binary ets processes total)a
+# config :exometer_core,
+#   predefined: [
+#     {
+#       [:erlang, :memory],
+#       {:function, :erlang, :memory, [], :proplist, memory_stats},
+#       []
+#     },
+    # {
+    #   [:erlang, :statistics],
+    #   {:function, :erlang, :statistics, [:'$dp'], :value, [:run_queue]},
+    #   []
+    # },
+  #]
+#   reporters: [
+#     "Elixir.Alchemetrics.ConsoleReporter": [hostname: 'localhost', port: 8125]
+#   ],
+#   report: [
+#     subscribers: [
+#       {
+#         Elixir.Alchemetrics.ConsoleReporter,
+#         [:erlang, :memory], memory_stats, polling_interval, true, [:x]
+#       }
+#     ]
+#   ]
+
+
+
+
 # It is also possible to import configuration files, relative to this
 # directory. For example, you can emulate configuration per environment
 # by uncommenting the line below and defining dev.exs, test.exs and such.
 # Configuration from the imported file will override the ones defined
 # here (which is why it is important to import them last).
 #
-import_config "#{Mix.env}.exs"
+#     import_config "#{Mix.env}.exs"

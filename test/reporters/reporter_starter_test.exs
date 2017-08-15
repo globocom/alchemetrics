@@ -1,10 +1,5 @@
 defmodule Alchemetrics.ReporterStarterTest do
   use ExUnit.Case
-  import Mock
-
-  @reporter_list [
-    [module: FakeReporter, opts: [some: "options"]]
-  ]
 
   setup do
     :exometer_report.remove_reporter(FakeReporter)
@@ -13,10 +8,8 @@ defmodule Alchemetrics.ReporterStarterTest do
 
   describe "#init" do
     test "starts all reporters on the :reporter_list apllication variable" do
-      with_mock(Application, [get_env: fn(_, _, _) -> @reporter_list end]) do
-        Alchemetrics.ReporterStarter.init(:ok)
-        assert [{FakeReporter, _}] = :exometer_report.list_reporters
-      end
+      Alchemetrics.ReporterStarter.init(:ok)
+      assert [{FakeReporter, _}] = :exometer_report.list_reporters
     end
   end
 
