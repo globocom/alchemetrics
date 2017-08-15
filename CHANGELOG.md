@@ -1,3 +1,10 @@
+## 0.3.0 (2017-08-15)
+- Removed plug dependency
+- Added reporter for debugging: console and logger
+- Added builtin metrics (erlang memory and stats)
+- Added min and max datapoints
+- Minor fixes.
+
 ## 0.2.3 (2017-08-07)
 - Fix exometer_init. Now, options changes are kept and passed to report function.
 
