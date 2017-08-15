@@ -14,7 +14,7 @@ defmodule Alchemetrics.CustomReporter do
   ]
   ```
   """
-  @callback init(opts) :: Map.t | Keyword.t
+  @callback init(opts) :: {:ok, Map.t} | {:ok, Keyword.t} | {:error, String.t},
 
   @doc """
   This is called every time a metric datapoint is reported.
@@ -66,8 +66,8 @@ defmodule Alchemetrics.CustomReporter do
       defp handle_options({:ok, options}) when is_list(options) or is_map(options), do: options |> Enum.into([])
       defp handle_options({:ok, options}), do: raise ArgumentError, "Invalid CustomReporter options: #{inspect options}. Must be a Keyword or Map"
 
-      defp handle_options({:error, message}) when is_bitstring(message), do: raise ArgumentError, "The following error occurred while trying to start #{__MODULE__}: #{message}"
-      defp handle_options({:error, _}), do: raise ArgumentError, "An unexpected error occurred while starting #{__MODULE__}"
+      defp handle_options({:error, message}) when is_bitstring(message), do: raise ErlangError, "The following error occurred while trying to start #{__MODULE__}: #{message}"
+      defp handle_options({:error, _}), do: raise ErlangError, "An unexpected error occurred while starting #{__MODULE__}"
 
       defp handle_options(_), do: raise ArgumentError, "Invalid return value to #{__MODULE__}.init/1 function. It should be {:ok, opts} or {:error, opts}"
 
