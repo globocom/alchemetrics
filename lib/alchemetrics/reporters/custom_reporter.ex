@@ -14,7 +14,7 @@ defmodule Alchemetrics.CustomReporter do
   ]
   ```
   """
-  @callback init(opts) :: {:ok, Map.t} | {:ok, Keyword.t} | {:error, String.t},
+  @callback init(opts) :: {:ok, Map.t} | {:ok, Keyword.t} | {:error, String.t}
 
   @doc """
   This is called every time a metric datapoint is reported.
