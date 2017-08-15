@@ -21,4 +21,3 @@ defmodule Alchemetrics.ReporterStarterTest do
     end
   end
 end
-

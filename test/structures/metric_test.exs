@@ -2,7 +2,7 @@ defmodule Alchemetrics.MetricTest do
   use ExUnit.Case
 
   alias Alchemetrics.Event
-  alias Alchemetrics.Metric
+  alias Alchemetrics.Exometer.Metric
 
   @allowed_metrics [:avg, :last_interval, :max, :min, :p95, :p99, :total]
 

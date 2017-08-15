@@ -1,15 +1,15 @@
-defmodule Alchemetrics.BuiltinMetrics.Beam do 
-  alias Alchemetrics.Backends.Exometer
+defmodule Alchemetrics.BuiltinMetrics.Beam do
+  alias Alchemetrics.Exometer
 
   @memory_datapoints ~w(atom binary ets processes total)a
-  @erlang_memory_metric %Alchemetrics.Metric{
+  @erlang_memory_metric %Alchemetrics.Exometer.Metric{
     name: ~w(beam memory)a,
     scope: {:function, :erlang, :memory, [], :proplist, @memory_datapoints},
     datapoints: @memory_datapoints,
     value: nil
   }
 
-  @erlang_statistics_metric %Alchemetrics.Metric{
+  @erlang_statistics_metric %Alchemetrics.Exometer.Metric{
     name: ~w(beam statistics)a,
     scope: {:function, :erlang, :statistics, [:'$dp'], :value, [:run_queue]},
     datapoints: [:run_queue],

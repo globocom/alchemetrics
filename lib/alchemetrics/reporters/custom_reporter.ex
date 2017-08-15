@@ -14,7 +14,7 @@ defmodule Alchemetrics.CustomReporter do
   ]
   ```
   """
-  @callback init(opts) :: any
+  @callback init(opts) :: {:ok, Map.t} | {:ok, Keyword.t} | {:error, String.t}
 
   @doc """
   This is called every time a metric datapoint is reported.
@@ -28,18 +28,24 @@ defmodule Alchemetrics.CustomReporter do
       @behaviour Alchemetrics.CustomReporter
 
       def exometer_init(options) do
-        options = __MODULE__.init(options) |> Enum.into([])
+        options = options
+        |> __MODULE__.init
+        |> handle_options
+
         {:ok, options}
       end
 
       def exometer_report([public_name, scope] = metric_name, data_point, _extra, value, options) do
         options = Keyword.put(options, :metadata, metadata_for(metric_name))
-        metric = Alchemetrics.Metric.metric_from_scope(scope, data_point)
+        metric = Alchemetrics.Exometer.Metric.metric_from_scope(scope, data_point)
 
         __MODULE__.report(public_name, metric, value, options)
         {:ok, options}
       end
 
+      def enable(options \\ [])
+      def enable(options) when is_list(options), do: Alchemetrics.ReporterStarter.start_reporter(__MODULE__, options)
+      def enable(options), do: raise ArgumentError, "Invalid options #{inspect options}. Must be a Keyword list"
 
       def disable, do: :exometer_report.disable_reporter(__MODULE__)
 
@@ -56,6 +62,14 @@ defmodule Alchemetrics.CustomReporter do
         |> Keyword.get(:options)
         |> Keyword.get(:__alchemetrics__, %{metadata: %{}})
       end
+
+      defp handle_options({:ok, options}) when is_list(options) or is_map(options), do: options |> Enum.into([])
+      defp handle_options({:ok, options}), do: raise ArgumentError, "Invalid CustomReporter options: #{inspect options}. Must be a Keyword or Map"
+
+      defp handle_options({:error, message}) when is_bitstring(message), do: raise ErlangError, "The following error occurred while trying to start #{__MODULE__}: #{message}"
+      defp handle_options({:error, _}), do: raise ErlangError, "An unexpected error occurred while starting #{__MODULE__}"
+
+      defp handle_options(_), do: raise ArgumentError, "Invalid return value to #{__MODULE__}.init/1 function. It should be {:ok, opts} or {:error, opts}"
 
       def exometer_subscribe(_, _, _, _, opts), do: {:ok, opts}
       def exometer_unsubscribe(_, _, _, opts), do: {:ok, opts}

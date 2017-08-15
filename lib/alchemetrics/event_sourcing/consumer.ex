@@ -1,6 +1,8 @@
 defmodule Alchemetrics.Consumer do
   use ConsumerSupervisor
 
+  def init(args), do: {:consumer, args}
+
   def start_link() do
     children = [
       worker(Alchemetrics.Handler, [], restart: :temporary)

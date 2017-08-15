@@ -1,4 +1,4 @@
-defmodule Alchemetrics.Metric do
+defmodule Alchemetrics.Exometer.Metric do
 
   @default_metrics %{
     p99: {:histogram, 99},
@@ -26,13 +26,13 @@ defmodule Alchemetrics.Metric do
   
 defstruct [:scope, :datapoints, :name, :value, metadata: %{}]
 
-  def from_event(%Alchemetrics.Event{name: name, metrics: metrics, value: value, metadata: metadata} = event) do
+  def from_event(%Alchemetrics.Event{name: name, metrics: metrics, value: value, metadata: metadata}) do
     validate_metrics(metrics)
 
     metrics
     |> scopes_for
     |> Enum.map(fn scope ->
-      %Alchemetrics.Metric{name: [name, scope], datapoints: datapoints_for(scope, metrics), scope: scope, value: value, metadata: metadata}
+      %Alchemetrics.Exometer.Metric{name: [name, scope], datapoints: datapoints_for(scope, metrics), scope: scope, value: value, metadata: metadata}
     end)
   end
 
