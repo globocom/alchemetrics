@@ -17,6 +17,8 @@
   </a>
 </p>
 
+**IMPORTANT: Alchemetrics is under development, so breaking changes are expected!**
+
 ## About
 Alchemetrics makes life easier for anyone who wants to collect and report metrics from an Elixir application.
 
