@@ -7,8 +7,10 @@ defmodule Alchemetrics.LoggerReporter do
     {:ok, options}
   end
 
-  def report(public_name, metric, value, options) do
-    Logger.debug "Reporting: #{inspect %{name: public_name, metric: metric, value: value, options: options}}"
+  def report(metadata, datapoint, value, options) do
+    metadata = Enum.into(metadata, %{})
+    base_report = %{datapoint: datapoint, value: value, options: options}
+    Logger.debug Map.merge(base_report, metadata)
     {:ok, options}
   end
 end
