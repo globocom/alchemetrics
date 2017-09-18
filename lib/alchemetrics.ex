@@ -2,28 +2,23 @@ defmodule Alchemetrics do
   alias Alchemetrics.Event
   alias Alchemetrics.Producer
 
-  @default_options %{
-    metadata: %{},
-    metrics: [:last_interval],
-  }
-
-  def report(metric_name, value, options \\ %{}) do
-    Map.merge(@default_options, options)
-    |> Map.put(:name, metric_name)
-    |> Map.put(:value, value)
-    |> Event.create
+  def report(value, metadata) do
+    create_event(value, metadata, Alchemetrics.Exometer.Datapoints.histogram)
     |> Producer.enqueue
   end
 
-  defmacro report_time(metric_name, options, function_body) do
-    quote do
-      {total_time, result} = :timer.tc(fn -> unquote(function_body) |> Keyword.get(:do) end)
-      report(unquote(metric_name), total_time, unquote(options))
-      result
-    end
+  def increment_by(value, metadata) do
+    create_event(value, metadata, Alchemetrics.Exometer.Datapoints.spiral)
+    |> Producer.enqueue
   end
 
-  def count(metric_name, %{metadata: metadata}) do
-    report(metric_name, 1, %{metrics: [:total, :last_interval], metadata: metadata})
+  def increment(metadata), do: increment_by(1, metadata)
+
+  defp create_event(value, metadata, datapoints) do
+    %{}
+    |> Map.put(:metadata, metadata)
+    |> Map.put(:datapoints, datapoints)
+    |> Map.put(:value, value)
+    |> Event.create
   end
 end

@@ -35,11 +35,11 @@ defmodule Alchemetrics.CustomReporter do
         {:ok, options}
       end
 
-      def exometer_report([public_name, scope] = metric_name, data_point, _extra, value, options) do
-        options = Keyword.put(options, :metadata, metadata_for(metric_name))
-        metric = Alchemetrics.Exometer.Metric.metric_from_scope(scope, data_point)
+      def exometer_report([scope, _] = metric_name, exometer_datapoint, _extra, value, options) do
+        metadata = metadata_for(metric_name)
+        datapoint = Alchemetrics.Exometer.Datapoints.from_scope(scope, exometer_datapoint)
 
-        __MODULE__.report(public_name, metric, value, options)
+        __MODULE__.report(metadata, datapoint, value, options)
         {:ok, options}
       end
 
