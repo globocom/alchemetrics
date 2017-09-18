@@ -10,7 +10,7 @@ defmodule Alchemetrics.Event do
   end
 
   defp validate_metrics(datapoints) when is_list(datapoints), do: :ok
-  defp validate_metrics(datapoints), do: raise ArgumentError, message: "Invalid metric list #{inspect datapoints}. Must be a list of atoms"
+  defp validate_metrics(datapoints), do: raise ArgumentError, message: "Invalid datapoint list #{inspect datapoints}. Must be a list of atoms"
 
   defp validate_metadata(metadata) when is_list(metadata) or is_nil(metadata), do: :ok
   defp validate_metadata(metadata), do: raise ArgumentError, message: "Invalid metadata #{inspect metadata}. Must be a list"
