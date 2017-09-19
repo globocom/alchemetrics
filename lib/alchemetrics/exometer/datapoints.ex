@@ -41,15 +41,17 @@ defmodule Alchemetrics.Exometer.Datapoints do
     end)
   end
 
-  def validate(datapoints) do
-    datapoints
-    |> Enum.all?(&is_metric/1)
-  end
-
   def scopes_for(datapoints) do
     datapoints
     |> Enum.map(&(elem(@datapoints[&1], 0)))
     |> Enum.uniq
+  end
+
+  def validate(datapoint_list) do
+    Enum.each(datapoint_list, fn(datapoint) ->
+      if !Map.has_key?(@datapoints, datapoint),
+        do: raise ArgumentError, message: "Invalid metric #{inspect datapoint}. The parameter 'datapoints' must be one of: #{inspect Map.keys(@default_datapoints)}"
+    end)
   end
 
   defp is_metric(metric) do
