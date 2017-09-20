@@ -39,7 +39,7 @@
   end
 
   # Specifies which paths to compile per environment.
-  
+
   defp elixirc_paths(:test), do: ["lib", "test/support"]
   defp elixirc_paths(_),     do: ["lib"]
   # Dependencies can be Hex packages:
@@ -57,7 +57,7 @@
       {:exometer_core, "~> 1.0", hex: :basho_exometer_core},
 
       {:ex_doc, ">= 0.0.0", only: :dev},
-      {:mock, "~> 0.2.0", only: :test},
+      {:mock, "~> 0.3.1", only: :test},
       {:excoveralls, "~> 0.7", only: :test}
     ]
   end
