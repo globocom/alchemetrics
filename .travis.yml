@@ -1,5 +1,14 @@
 language: elixir
 elixir:
-  - 1.4
+  - 1.4.0
+  - 1.4.1
+  - 1.5.0
+  - 1.5.1
 otp_release:
   - 19.2
+  - 20.0
+
+script:
+  - mix coveralls.travis
+env:
+  - MIX_ENV=test
