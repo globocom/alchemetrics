@@ -10,18 +10,20 @@ defmodule Alchemetrics.Exometer.Datapoints do
   }
 
   @erlang_datapoints %{
-    memory_atom: {:memory, :atom},
-    memory_binary: {:memory, :binary},
-    memory_ets: {:memory, :ets},
-    memory_processes: {:memory, :processes},
-    memory_total: {:memory, :total},
-    statistics_runqueue: {:statistics, :run_queue}
+    memory_atom: {:beam, :atom},
+    memory_binary: {:beam, :binary},
+    memory_ets: {:beam, :ets},
+    memory_processes: {:beam, :processes},
+    memory_total: {:beam, :total},
+    system_runqueue: {:beam, :run_queue}
   }
 
   @datapoints Map.merge(@default_datapoints, @erlang_datapoints)
 
   def spiral, do: [:last_interval, :total]
-  def histogram, do: [:p99, :p95, :avg, :min, :max] ++ spiral
+  def histogram, do: [:p99, :p95, :avg, :min, :max] ++ spiral()
+  def memory, do: [:atom, :binary, :ets, :processes, :total]
+  def system, do: [:run_queue]
 
   def from_scope(scope, datapoint) do
     case Enum.find(@datapoints, fn({_, d}) -> d == {scope, datapoint} end) do
@@ -52,10 +54,5 @@ defmodule Alchemetrics.Exometer.Datapoints do
       if !Map.has_key?(@datapoints, datapoint),
         do: raise ArgumentError, message: "Invalid metric #{inspect datapoint}. The parameter 'datapoints' must be one of: #{inspect Map.keys(@default_datapoints)}"
     end)
-  end
-
-  defp is_metric(metric) do
-    if !Map.has_key?(@datapoints, metric),
-      do: raise ArgumentError, message: "Invalid metric #{inspect metric}. The parameter 'datapoints' must be one of: #{inspect Map.keys(@default_datapoints)}"
   end
 end
