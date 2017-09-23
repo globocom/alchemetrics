@@ -41,7 +41,7 @@ defmodule Alchemetrics.EventTest do
 
     test "raise ArgumentError if the value is not a number" do
       assert_raise ArgumentError, fn ->
-        Event.create(%{value: 1, datapoints: [:p99], value: "one"})
+        Event.create(%{datapoints: [:p99], value: "one"})
       end
     end
 
