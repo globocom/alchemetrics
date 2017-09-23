@@ -23,8 +23,13 @@ defmodule Alchemetrics.BuiltinMetrics.Beam do
   end
 
   def init(:ok) do
-    Exometer.ensure_created_and_subscribed @erlang_memory_metric
-    Exometer.ensure_created_and_subscribed @erlang_statistics_metric
-    {:ok, :added}
+    case Application.get_env(:alchemetrics, :instrument_beam) do
+      true ->
+        Exometer.ensure_created_and_subscribed @erlang_memory_metric
+        Exometer.ensure_created_and_subscribed @erlang_statistics_metric
+        {:ok, :added}
+      _ ->
+        {:ok, :added}
+    end
   end
 end
