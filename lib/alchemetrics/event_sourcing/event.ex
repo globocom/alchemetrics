@@ -1,4 +1,6 @@
 defmodule Alchemetrics.Event do
+  @moduledoc false
+
   defstruct [:datapoints, :value, metadata: []]
 
   def create(opts \\ %{}) do

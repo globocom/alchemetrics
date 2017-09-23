@@ -1,4 +1,6 @@
 defmodule Alchemetrics.ProducerState do
+  @moduledoc false
+
   defstruct [event_store: :queue.new, demand: 0]
 
   alias Alchemetrics.Event
