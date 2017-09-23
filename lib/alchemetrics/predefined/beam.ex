@@ -1,4 +1,4 @@
-defmodule Alchemetrics.BuiltinMetrics.Beam do
+defmodule Alchemetrics.Predefined.Beam do
   alias Alchemetrics.Exometer
   alias Alchemetrics.Exometer.Datapoints
 
