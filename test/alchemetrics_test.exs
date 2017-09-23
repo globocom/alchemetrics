@@ -40,6 +40,12 @@ defmodule AlchemetricsTest do
       assert_raise(ArgumentError, fn -> Alchemetrics.report(1, "environment_test") end)
       assert_raise(ArgumentError, fn -> Alchemetrics.report(1, %{environment: :test}) end)
     end
+
+    test_with_mock "accepts a single atom as a name and report as name metadata", Alchemetrics.Producer, [:passthrough], [] do
+      Alchemetrics.report(100, :something)
+      event = %Alchemetrics.Event{@histogram_event | metadata: [name: :something]}
+      assert called Producer.enqueue(event)
+    end
   end
 
   describe "#increment_by" do
@@ -67,6 +73,12 @@ defmodule AlchemetricsTest do
       assert_raise(ArgumentError, fn -> Alchemetrics.increment_by(2, "environment_test") end)
       assert_raise(ArgumentError, fn -> Alchemetrics.increment_by(2, %{environment: :test}) end)
     end
+
+    test_with_mock "accepts a single atom as a name and report as name metadata", Alchemetrics.Producer, [:passthrough], [] do
+      Alchemetrics.increment_by(2, :something)
+      event = %Alchemetrics.Event{@spiral_event | metadata: [name: :something]}
+      assert called Producer.enqueue(event)
+    end
   end
 
   describe "#increment" do
@@ -87,6 +99,12 @@ defmodule AlchemetricsTest do
       assert_raise(ArgumentError, fn -> Alchemetrics.increment(%{environment: :test}) end)
       assert_raise(ArgumentError, fn -> Alchemetrics.increment("environment_test") end)
       assert_raise(ArgumentError, fn -> Alchemetrics.increment(%{environment: :test}) end)
+    end
+
+    test_with_mock "accepts a single atom as a name and report as name metadata", Alchemetrics.Producer, [:passthrough], [] do
+      Alchemetrics.increment(:something)
+      event = %Alchemetrics.Event{@spiral_event | metadata: [name: :something], value: 1}
+      assert called Producer.enqueue(event)
     end
   end
 end

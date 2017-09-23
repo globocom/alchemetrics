@@ -2,16 +2,19 @@ defmodule Alchemetrics do
   alias Alchemetrics.Event
   alias Alchemetrics.Producer
 
+  def report(value, name) when is_atom(name), do: report(value, [name: name])
   def report(value, metadata) do
     create_event(value, metadata, Alchemetrics.Exometer.Datapoints.histogram)
     |> Producer.enqueue
   end
 
+  def increment_by(value, name) when is_atom(name), do: increment_by(value, [name: name])
   def increment_by(value, metadata) do
     create_event(value, metadata, Alchemetrics.Exometer.Datapoints.spiral)
     |> Producer.enqueue
   end
 
+  def increment(value, name) when is_atom(name), do: increment(value, [name: name])
   def increment(metadata), do: increment_by(1, metadata)
 
   defp create_event(value, metadata, datapoints) do
