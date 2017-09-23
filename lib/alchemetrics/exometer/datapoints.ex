@@ -1,4 +1,6 @@
 defmodule Alchemetrics.Exometer.Datapoints do
+  @moduledoc false
+
   @default_datapoints %{
     p99: {:histogram, 99},
     p95: {:histogram, 95},

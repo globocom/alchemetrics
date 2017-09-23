@@ -1,4 +1,6 @@
 defmodule Alchemetrics.Handler do
+  @moduledoc false
+
   alias Alchemetrics.Event
   alias Alchemetrics.Exometer
   alias Alchemetrics.Exometer.Metric

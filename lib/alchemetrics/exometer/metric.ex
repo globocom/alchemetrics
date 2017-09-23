@@ -1,4 +1,6 @@
 defmodule Alchemetrics.Exometer.Metric do
+  @moduledoc false
+
   alias Alchemetrics.Exometer.Datapoints
 
   @enforce_keys [:scope, :name, :value]

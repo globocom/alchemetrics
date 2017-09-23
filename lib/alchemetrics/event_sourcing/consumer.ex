@@ -1,4 +1,6 @@
 defmodule Alchemetrics.Consumer do
+  @moduledoc false
+
   use ConsumerSupervisor
 
   def init(args), do: {:consumer, args}

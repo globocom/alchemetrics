@@ -1,4 +1,6 @@
 defmodule Alchemetrics.Producer do
+  @moduledoc false
+
   use GenStage
 
   alias Alchemetrics.ProducerState

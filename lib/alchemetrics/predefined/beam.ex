@@ -1,4 +1,6 @@
 defmodule Alchemetrics.Predefined.Beam do
+  @moduledoc false
+
   alias Alchemetrics.Exometer
   alias Alchemetrics.Exometer.Datapoints
 
