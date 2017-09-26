@@ -15,6 +15,9 @@
   <a href="https://hex.pm/packages/alchemetrics">
     <img alt="Hex" src="https://img.shields.io/hexpm/dt/alchemetrics.svg">
   </a>
+  <a href='https://coveralls.io/github/globocom/alchemetrics?branch=master'>
+    <img src='https://coveralls.io/repos/github/globocom/alchemetrics/badge.svg?branch=master' alt='Coverage Status' />
+  </a>
 </p>
 
 **IMPORTANT: Alchemetrics is under development, so breaking changes are expected!**
