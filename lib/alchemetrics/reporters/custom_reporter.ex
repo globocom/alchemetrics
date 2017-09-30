@@ -2,31 +2,17 @@ defmodule Alchemetrics.CustomReporter do
   @type t :: module
   @type opts :: Map.t
 
-  @doc """
-  This is called when the reporter is started. You can put some initialization code here, like connection stuff.
-
-  The `opts` argument stores reporter specific configuration. You can set this parameter with `opts` option on `reporter_list` config.
-
-  ```
-  # The value of `opts` key is the argument of the init/1 function!
-  config :alchemetrics, reporter_list: [
-    [module: MyApp.DummyReporter, opts: [some_data: "hello!"]]
-  ]
-  ```
-  """
+  @doc false
   @callback init(opts) :: {:ok, Map.t} | {:ok, Keyword.t} | {:error, String.t}
 
-  @doc """
-  This is called every time a metric datapoint is reported.
-
-  For a metric which is reported every 10 seconds, this function will be called every 10 seconds for each one of its datapoints.
-  """
+  @doc false
   @callback report(String.t, Atom.t, any, opts) :: any
 
   defmacro __using__(_) do
     quote do
       @behaviour Alchemetrics.CustomReporter
 
+      @doc false
       def exometer_init(options) do
         options = options
         |> __MODULE__.init
@@ -35,6 +21,7 @@ defmodule Alchemetrics.CustomReporter do
         {:ok, options}
       end
 
+      @doc false
       def exometer_report([scope, _] = metric_name, exometer_datapoint, _extra, value, options) do
         metadata = metadata_for(metric_name)
         datapoint = Alchemetrics.Exometer.Datapoints.from_scope(scope, exometer_datapoint)
@@ -43,10 +30,20 @@ defmodule Alchemetrics.CustomReporter do
         {:ok, options}
       end
 
+      @doc """
+      Enables the reporter. All datasets created **after** the reporter is enabled will subscribe to this reporter.
+
+      ## Params
+        - `options`: Start up options.
+      """
       def enable(options \\ [])
       def enable(options) when is_list(options), do: Alchemetrics.ReporterStarter.start_reporter(__MODULE__, options)
       def enable(options), do: raise ArgumentError, "Invalid options #{inspect options}. Must be a Keyword list"
 
+
+      @doc """
+      Disables the reporter. All subscribed data sets will unsubscribe from this reporter.
+      """
       def disable, do: :exometer_report.disable_reporter(__MODULE__)
 
       defp metadata_for(metric_name) do
@@ -71,13 +68,21 @@ defmodule Alchemetrics.CustomReporter do
 
       defp handle_options(_), do: raise ArgumentError, "Invalid return value to #{__MODULE__}.init/1 function. It should be {:ok, opts} or {:error, opts}"
 
+      @doc false
       def exometer_subscribe(_, _, _, _, opts), do: {:ok, opts}
+      @doc false
       def exometer_unsubscribe(_, _, _, opts), do: {:ok, opts}
+      @doc false
       def exometer_call(_, _, opts), do: {:ok, opts}
+      @doc false
       def exometer_cast(_, opts), do: {:ok, opts}
+      @doc false
       def exometer_info(_, opts), do: {:ok, opts}
+      @doc false
       def exometer_newentry(_, opts), do: {:ok, opts}
+      @doc false
       def exometer_setopts(_, _, _, opts), do: {:ok, opts}
+      @doc false
       def exometer_terminate(_, _), do: nil
     end
   end
