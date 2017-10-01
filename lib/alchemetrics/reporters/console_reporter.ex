@@ -2,7 +2,7 @@ defmodule Alchemetrics.ConsoleReporter do
   use Alchemetrics.CustomReporter
 
   @moduledoc """
-  Backend to print the measurements in the application console. Useful for debugging.
+  Backend to print the datasets measurements on the console.
 
   ## Using it with IEx
 
@@ -21,7 +21,7 @@ defmodule Alchemetrics.ConsoleReporter do
   ```
 
   ## Starting on application boot
-  To start `Alchemetrics.ConsoleBackend` at application boot, just add it to the reporter_list config. Start up parameters are set in `opts` option.
+  To start `Alchemetrics.ConsoleBackend` at application boot, just add it to the `:reporter_list` config option. Start up parameters are set in `opts` option.
 
   ```elixir
   # on config/config.exs
