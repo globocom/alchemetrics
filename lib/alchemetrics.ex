@@ -3,59 +3,24 @@ defmodule Alchemetrics do
   alias Alchemetrics.Producer
 
   @moduledoc """
-  Data Collection Interface
+  Data Report Interface
 
-  All collected values follow the same flow:
-    1. They are stored in a data set and stay there for a configurable time span;
-    2. After that time span all measurements are applied to these values.
-    3. Those measurements are sent to the Backends;
-    4. The data set is reset
+  All reported values follow the same flow:
+    1. They are stored in a `data set` and stay there for a configurable time span;
+    2. after that time span the `data set` is measured. Various measurements are made on the `data set`;
+    3. The measurement results are sent to the backends;
+    4. The data set is reset.
 
   This document provides a detailed explanation about each one of those steps.
 
-  ## Collection of Values
-  All collected values are stored in data sets. When collecting a value, you must identify it using the collection metadata. Collected values that have similar metadata are stored in the same dataset. If a collected value can not be stored in any existing data set, a new one is created.
+  ## Value Report
+  All collected values are stored in data sets. The reported value is identified by a name or by some metadata, which determines the set of data at which this value will be stored. Therefore, values with metadata or similar names are stored in the same data set. If a collected value can not be stored in any existing data set, a new one is created.
   Each value accumulated in the data set will stay there for a configurable time interval. At the end of this interval, the data set will be measured.
 
   ## Data Set Measurement
-  Measuring a data set is to perform a certain calculation on the data accumulated in it. The types of measurement include, but are not limited to, the mean, percentiles and sum of these values.
-  The measurements that will be applied to a dataset depend on how the data was collected. Currently, Alchemetrics supports two types of collection: increments and reports.
+  Measuring a data set is to perform a certain calculation on the data accumulated in it. The types of measurement include the average calculation, percentiles and the sum of these values. Each of the measurements generates a different value, which is sent to the `Backends` configured in the application. After that, the data set is reset.
 
-  Each of the measurements generates a different data, which is sent to the `Backends` configured in the application. After that the data set is reset.
-  Currently, Alchemetrics supports two types of data set: Increment Data Sets and Generic Data Sets.  The measurements that will be applied to a data set depend on its type.
-
-  ### Increment Data Sets
-  The values collected through the `increment_by/2` and `increment/1` functions will be stored in `Increment Data Sets`.
-  The following measurements are available for this type of data set:
-
-    - `:last_interval`: Represents the sum of all values collected in the last time interval.
-    - `:total`: Represents the total sum since the first report.
-
-  ### Increment Examples:
-  ```elixir
-  # Collecting 5 requests within the same time range:
-  Alchemetrics.increment(requests_on: %{controller: UsersController, action: :info})
-  Alchemetrics.increment(requests_on: %{controller: UsersController, action: :info})
-  Alchemetrics.increment(requests_on: %{controller: UsersController, action: :info})
-  Alchemetrics.increment(requests_on: %{controller: UsersController, action: :info})
-  Alchemetrics.increment(requests_on: %{controller: UsersController, action: :info})
-
-  # The data set is measured and the value is sent to the ConsoleBackend.
-  # After that, the data set is reset.
-  # The ConsoleBackend will print each one of the measurements
-  # Printing :last_interval
-  %{datapoint: :last_interval, requests_on: %{action: :info, controller: UsersController}, value: 5}
-  # Printing :total
-  %{datapoint: :total, requests_on: %{action: :info, controller: UsersController}, value: 5}
-
-  # No increments were made on the last interval.
-  # So, when the measurement is made, the last interval sum will be zero, but the total is kept at 5:
-  %{datapoint: :last_interval, requests_on: %{action: :info, controller: UsersController}, value: 0}
-  %{datapoint: :total, requests_on: %{action: :info, controller: UsersController}, value: 5}
-  ```
-
-  ### Generic Data Sets
-  The values collected through the `report/2` function are stored in a `Generic Data Set`. The measurements made on these data sets are more general. While the values stored by the increments are only added together, in this type of data set many other measurement types are also available.
+  When reporting a value through the `report/2` function, the following measurements will be applied:
 
     - `:p99`: The 99th percentile of the data set.
     - `:p95`: The 95th percentile of the data set.
@@ -66,10 +31,12 @@ defmodule Alchemetrics do
     - `:total`: Like in the Increment Data Set, the total sum since the first report is also available here.
 
   ### Report Examples:
-
   ```elixir
+  # Making two reports for the same data set in the same time interval
   Alchemetrics.report(1, response_time_on: %{controller: UsersController, action: :info})
   Alchemetrics.report(99, response_time_on: %{controller: UsersController, action: :info})
+  # Each measurement is made in the data set and the result is sent to the backends
+  # In this example the backend only prints the results of the measurements in the console
   %{datapoint: :max, response_time_on: %{action: :info, controller: UsersController}, value: 99}
   %{datapoint: :min, response_time_on: %{action: :info, controller: UsersController}, value: 1}
   %{datapoint: :avg, response_time_on: %{action: :info, controller: UsersController}, value: 50}
@@ -78,15 +45,84 @@ defmodule Alchemetrics do
   %{datapoint: :last_interval, response_time_on: %{action: :info, controller: UsersController}, value: 100}
   %{datapoint: :total, response_time_on: %{action: :info, controller: UsersController}, value: 100}
   ```
+
+  When reporting a value through the `increment/1` or `increment_by/2` functions, the following measurements will be applied:
+
+    - `:last_interval`: The sum of all data set values on the last time interval.
+    - `:total`: The total sum of the data set since the application boot.
+
+  ### Increment Examples:
+  ```elixir
+  # Collecting 3 requests within the same time range:
+  Alchemetrics.increment(requests_on: %{controller: UsersController, action: :info})
+  Alchemetrics.increment(requests_on: %{controller: UsersController, action: :info})
+  Alchemetrics.increment(requests_on: %{controller: UsersController, action: :info})
+
+  # The data set is measured and the value is sent to the backend.
+  # In this example the backend only prints the results of the measurements in the console
+  # After that, the data set is reset.
+  # The ConsoleBackend will print each one of the measurements
+  # Printing :last_interval
+  %{datapoint: :last_interval, requests_on: %{action: :info, controller: UsersController}, value: 3}
+  # Printing :total
+  %{datapoint: :total, requests_on: %{action: :info, controller: UsersController}, value: 3}
+
+  # No increments were made on the last interval.
+  # So, when the measurement is made, the last interval sum will be zero, but the total is kept at 3:
+  %{datapoint: :last_interval, requests_on: %{action: :info, controller: UsersController}, value: 0}
+  %{datapoint: :total, requests_on: %{action: :info, controller: UsersController}, value: 3}
+  ```
   """
 
-
   @doc """
-  Collect a value into a Generic Data Set.
+  Reports a generic value.
+
+  The following measures will be applied:
+
+    - `:p99`: The 99th percentile of the data set.
+    - `:p95`: The 95th percentile of the data set.
+    - `:avg`: The average of the data set.
+    - `:min`: The minimum value at the data set.
+    - `:max`: The maximum value at the data set.
+    - `:last_interval`: Like in the Increment Data Set, the sum on the last interval is also available here.
+    - `:total`: Like in the Increment Data Set, the total sum since the first report is also available here.
 
   ## Params:
     - `value`: The collected value. Can be any integer
     - `name`: Identifies the data set where this value should be stored. Can be an `atom` or a `KeywordList`.
+
+  ## Usage:
+
+  Reports are useful, to report generic values, like a response time for a given route. Therefore, you could create a Plug that reports the response time of a certain route:
+
+  ```elixir
+  defmodule MyApp.Plugs.RequestMeasurer do
+    @behaviour Plug
+
+    def init(opts \\ []), do: opts
+
+    def call(conn, opts) do
+      start = System.monotonic_time()
+      Plug.Conn.register_before_send(conn, fn conn ->
+        diff = System.convert_time_unit(System.monotonic_time() - start, :native, :micro_seconds)
+        Alchemetrics.report(diff, request_time: %{
+          method: conn.method,
+          path: conn.request_path,
+          status: conn.status
+        })
+        conn
+      end)
+    end
+  end
+
+  # my_app_web/endpoint.ex
+  defmodule MyApp.Endpoint do
+    use Phoenix.Endpoint, otp_app: :my_app
+
+    plug MyApp.Plugs.RequestMeasurer
+    ...
+  end
+  ```
   """
   def report(value, name) when is_atom(name), do: report(value, [name: name])
   def report(value, metadata) do
@@ -96,6 +132,11 @@ defmodule Alchemetrics do
 
   @doc """
   Similar to `increment/1`, but accept any value other than 1.
+
+  The following measures will be applied:
+
+    - `:last_interval`: The sum of all data set values on the last time interval.
+    - `:total`: The total sum of the data set since the application boot.
 
   ## Params:
     - `value`: The value to be collected. Can be any integer.
@@ -108,12 +149,17 @@ defmodule Alchemetrics do
   end
 
   @doc """
-  Increment the count into an Increment Data Set by 1.
+  Reports the value 1.
+
+  The following measures will be applied:
+
+    - `:last_interval`: The sum of all data set values on the last time interval.
+    - `:total`: The total sum of the data set since the application boot.
 
   ## Params:
     - `name`: Identifies the data set where this value should be stored. Can be an `atom` or a `KeywordList`.
 
-  ## Example:
+  ## Usage:
   Increments are useful, for example, to count the number of requests on a particular route in a Phoenix application.
 
   ```elixir
