@@ -1,4 +1,4 @@
-defmodule Alchemetrics.ReporterStarter do
+defmodule Alchemetrics.BackendStarter do
   @moduledoc false
 
   def start_link do

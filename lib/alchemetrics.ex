@@ -21,7 +21,7 @@ defmodule Alchemetrics do
   Each value accumulated in the dataset will stay there for a configurable time interval. At the end of this interval, the dataset will be measured and reset.
 
   ## Data Set Measurement
-  Measuring a dataset is to perform a certain calculation on the values accumulated in it. The types of measurement include the average calculation, percentiles and the sum of these values. Each of the measurements generates a different value, which is sent to the `Alchemetrics.CustomReporter` configured in the application. After that, the dataset is reset.
+  Measuring a dataset is to perform a certain calculation on the values accumulated in it. The types of measurement include the average calculation, percentiles and the sum of these values. Each of the measurements generates a different value, which is sent to the `Alchemetrics.CustomBackend` configured in the application. After that, the dataset is reset.
 
   When reporting a value through the `report/2` function, the following measurements will be made:
 

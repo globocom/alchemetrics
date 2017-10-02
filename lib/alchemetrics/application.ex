@@ -12,7 +12,7 @@ defmodule Alchemetrics.Application do
     children = [
       # Starts a worker by calling: Alchemetrics.Worker.start_link(arg1, arg2, arg3)
       # worker(Alchemetrics.Worker, [arg1, arg2, arg3]),
-      worker(Alchemetrics.ReporterStarter, []),
+      worker(Alchemetrics.BackendStarter, []),
       worker(Alchemetrics.Predefined.Beam, []),
       worker(Alchemetrics.Producer, []),
       worker(Alchemetrics.Consumer, []),
