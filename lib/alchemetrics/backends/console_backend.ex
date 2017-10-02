@@ -1,5 +1,5 @@
-defmodule Alchemetrics.ConsoleReporter do
-  use Alchemetrics.CustomReporter
+defmodule Alchemetrics.ConsoleBackend do
+  use Alchemetrics.CustomBackend
 
   @moduledoc """
   Backend to print the datasets measurements on the console.
@@ -7,9 +7,9 @@ defmodule Alchemetrics.ConsoleReporter do
   ## Using it with IEx
 
   ```elixir
-  iex(1)> Alchemetrics.ConsoleReporter.enable
+  iex(1)> Alchemetrics.ConsoleBackend.enable
   :ok
-  Starting Elixir.Alchemetrics.ConsoleReporter with following options: []
+  Starting Elixir.Alchemetrics.ConsoleBackend with following options: []
   iex(2)> Alchemetrics.increment(:my_metric)
   :ok
   iex(3)> Alchemetrics.increment(:my_metric)
@@ -26,7 +26,7 @@ defmodule Alchemetrics.ConsoleReporter do
   ```elixir
   # on config/config.exs
   config :alchemetrics, reporter_list: [
-    [module: Alchemetrics.ConsoleReporter, opts: []]
+    [module: Alchemetrics.ConsoleBackend, opts: []]
   ]
   ```
   """

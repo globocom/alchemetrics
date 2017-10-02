@@ -27,17 +27,17 @@ defmodule Alchemetrics.ExometerTest do
     end
 
     test "register the metric into a reporter" do
-      with_mock(:exometer_report, [:passthrough], [list_reporters: fn() -> [{SomeReporter, nil}] end]) do
+      with_mock(:exometer_report, [:passthrough], [list_reporters: fn() -> [{SomeBackend, nil}] end]) do
         Exometer.update(@metric)
-        assert called :exometer_report.subscribe(SomeReporter, @metric.name, :_, :_)
+        assert called :exometer_report.subscribe(SomeBackend, @metric.name, :_, :_)
       end
     end
 
     test "register the metric into multiple reporters" do
-      with_mock(:exometer_report, [:passthrough], [list_reporters: fn() -> [{SomeReporter, nil}, {AnotherReporter, nil}] end]) do
+      with_mock(:exometer_report, [:passthrough], [list_reporters: fn() -> [{SomeBackend, nil}, {AnotherBackend, nil}] end]) do
         Exometer.update(@metric)
-        assert called :exometer_report.subscribe(SomeReporter, @metric.name, :_, :_)
-        assert called :exometer_report.subscribe(AnotherReporter, @metric.name, :_, :_)
+        assert called :exometer_report.subscribe(SomeBackend, @metric.name, :_, :_)
+        assert called :exometer_report.subscribe(AnotherBackend, @metric.name, :_, :_)
       end
     end
   end

@@ -1,4 +1,4 @@
-defmodule Alchemetrics.CustomReporter do
+defmodule Alchemetrics.CustomBackend do
   @type t :: module
   @type metadata :: Keyword.t
   @type measure :: Atom.t
@@ -10,14 +10,14 @@ defmodule Alchemetrics.CustomReporter do
   @callback report(metadata, measure, value, state) :: any
 
   @moduledoc """
-  Interface to create CustomReporters.
+  Interface to create CustomBackends.
 
   The backends are responsible for distributing the measurement results. When a dataset is created, it subscribes to all enabled backends and send measurement results to them.
 
-  Alchemetrics comes with a built-in backend named `Alchemetrics.ConsoleReporter` that prints all reported data to console. It can be very useful when debuging your metrics.
+  Alchemetrics comes with a built-in backend named `Alchemetrics.ConsoleBackend` that prints all reported data to console. It can be very useful when debuging your metrics.
 
   ## Creating a CustomBackend
-  The `Alchemetrics.CustomReporter__using__/1` macro will already include the behavior of custom reporter in a module. The behavior has two callbacks: `c:init/1` and `c:report/4`.
+  The `Alchemetrics.CustomBackend__using__/1` macro will already include the behavior of custom reporter in a module. The behavior has two callbacks: `c:init/1` and `c:report/4`.
 
   The `c:init/1` callback is called at the moment the backend is initialized. This is where, for example, connections to external services are established, or sockets to send data via TCP/UDP are open.
 
@@ -39,8 +39,8 @@ defmodule Alchemetrics.CustomReporter do
   Let's see the implementation of a backend that sends metrics to Logstash via UDP:
 
   ```elixir
-  defmodule MyApp.Reporters.UDP do
-    use Alchemetrics.CustomReporter
+  defmodule MyApp.Backends.UDP do
+    use Alchemetrics.CustomBackend
 
     def init(init_opts) do
       case gen_udp.open(0) do
@@ -77,14 +77,14 @@ defmodule Alchemetrics.CustomReporter do
   ```elixir
   # config/config.exs
   config :alchemetrics, reporter_list: [
-    [module: MyApp.Reporters.UDP, opts: [hostname: "logstash.mycorp.com", port: 8888]]
+    [module: MyApp.Backends.UDP, opts: [hostname: "logstash.mycorp.com", port: 8888]]
   ]
   ```
   """
 
   defmacro __using__(_) do
     quote do
-      @behaviour Alchemetrics.CustomReporter
+      @behaviour Alchemetrics.CustomBackend
 
       @doc false
       def exometer_init(options) do
@@ -111,7 +111,7 @@ defmodule Alchemetrics.CustomReporter do
         - `options`: Start up options.
       """
       def enable(options \\ [])
-      def enable(options) when is_list(options), do: Alchemetrics.ReporterStarter.start_reporter(__MODULE__, options)
+      def enable(options) when is_list(options), do: Alchemetrics.BackendStarter.start_reporter(__MODULE__, options)
       def enable(options), do: raise ArgumentError, "Invalid options #{inspect options}. Must be a Keyword list"
 
 
@@ -135,7 +135,7 @@ defmodule Alchemetrics.CustomReporter do
       end
 
       defp handle_options({:ok, options}) when is_list(options) or is_map(options), do: options |> Enum.into([])
-      defp handle_options({:ok, options}), do: raise ArgumentError, "Invalid CustomReporter options: #{inspect options}. Must be a Keyword or Map"
+      defp handle_options({:ok, options}), do: raise ArgumentError, "Invalid CustomBackend options: #{inspect options}. Must be a Keyword or Map"
 
       defp handle_options({:error, message}) when is_bitstring(message), do: raise ErlangError, "The following error occurred while trying to start #{__MODULE__}: #{message}"
       defp handle_options({:error, _}), do: raise ErlangError, "An unexpected error occurred while starting #{__MODULE__}"
