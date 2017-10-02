@@ -22,7 +22,7 @@
       test_coverage: [tool: ExCoveralls],
       name: "Alchemetrics",
       docs: [
-        main: "Alchemetrics",
+        main: "api-reference",
         source_url: @project_url
       ],
       deps: deps(),
