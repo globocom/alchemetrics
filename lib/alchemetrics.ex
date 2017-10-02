@@ -6,36 +6,39 @@ defmodule Alchemetrics do
   Data Report Interface
 
   All reported values follow the same flow:
-    1. They are stored in a `data set` and stay there for a configurable time span;
-    2. after that time span the `data set` is measured. Various measurements are made on the `data set`;
+    1. They are stored in a dataset and stay there for a configurable time span;
+    2. After that time span the dataset is measured. Various measurements are made on the dataset;
     3. The measurement results are sent to the backends;
-    4. The data set is reset.
+    4. The dataset is reset.
 
   This document provides a detailed explanation about each one of those steps.
 
   ## Value Report
-  All collected values are stored in data sets. The reported value is identified by a name or by some metadata, which determines the set of data at which this value will be stored. Therefore, values with metadata or similar names are stored in the same data set. If a collected value can not be stored in any existing data set, a new one is created.
-  Each value accumulated in the data set will stay there for a configurable time interval. At the end of this interval, the data set will be measured.
+  All collected values are stored in datasets. The reported value is identified by a name or by some metadata, which determines the set of data at which this value will be stored. Therefore, values with metadata or similar names are stored in the same dataset.
+
+  If a collected value can not be stored in any existing dataset, a new one is created.
+
+  Each value accumulated in the dataset will stay there for a configurable time interval. At the end of this interval, the dataset will be measured and reset.
 
   ## Data Set Measurement
-  Measuring a data set is to perform a certain calculation on the data accumulated in it. The types of measurement include the average calculation, percentiles and the sum of these values. Each of the measurements generates a different value, which is sent to the `Backends` configured in the application. After that, the data set is reset.
+  Measuring a dataset is to perform a certain calculation on the values accumulated in it. The types of measurement include the average calculation, percentiles and the sum of these values. Each of the measurements generates a different value, which is sent to the `Alchemetrics.CustomReporter` configured in the application. After that, the dataset is reset.
 
-  When reporting a value through the `report/2` function, the following measurements will be applied:
+  When reporting a value through the `report/2` function, the following measurements will be made:
 
-    - `:p99`: The 99th percentile of the data set.
-    - `:p95`: The 95th percentile of the data set.
-    - `:avg`: The average of the data set.
-    - `:min`: The minimum value at the data set.
-    - `:max`: The maximum value at the data set.
-    - `:last_interval`: Like in the Increment Data Set, the sum on the last interval is also available here.
-    - `:total`: Like in the Increment Data Set, the total sum since the first report is also available here.
+    - `:p99`: The 99th percentile of the dataset.
+    - `:p95`: The 95th percentile of the dataset.
+    - `:avg`: The average of the dataset.
+    - `:min`: The minimum value at the dataset.
+    - `:max`: The maximum value at the dataset.
+    - `:last_interval`: The sum of all dataset values on the last time interval.
+    - `:total`: The total sum of the dataset since the application boot.
 
   ### Report Examples:
   ```elixir
-  # Making two reports for the same data set in the same time interval
+  # Making two reports for the same dataset in the same time interval
   Alchemetrics.report(1, response_time_on: %{controller: UsersController, action: :info})
   Alchemetrics.report(99, response_time_on: %{controller: UsersController, action: :info})
-  # Each measurement is made in the data set and the result is sent to the backends
+  # Each measurement is made in the dataset and the result is sent to the backends
   # In this example the backend only prints the results of the measurements in the console
   %{datapoint: :max, response_time_on: %{action: :info, controller: UsersController}, value: 99}
   %{datapoint: :min, response_time_on: %{action: :info, controller: UsersController}, value: 1}
@@ -48,8 +51,8 @@ defmodule Alchemetrics do
 
   When reporting a value through the `increment/1` or `increment_by/2` functions, the following measurements will be applied:
 
-    - `:last_interval`: The sum of all data set values on the last time interval.
-    - `:total`: The total sum of the data set since the application boot.
+    - `:last_interval`: The sum of all dataset values on the last time interval.
+    - `:total`: The total sum of the dataset since the application boot.
 
   ### Increment Examples:
   ```elixir
@@ -58,9 +61,9 @@ defmodule Alchemetrics do
   Alchemetrics.increment(requests_on: %{controller: UsersController, action: :info})
   Alchemetrics.increment(requests_on: %{controller: UsersController, action: :info})
 
-  # The data set is measured and the value is sent to the backend.
+  # The dataset is measured and the value is sent to the backend.
   # In this example the backend only prints the results of the measurements in the console
-  # After that, the data set is reset.
+  # After that, the dataset is reset.
   # The ConsoleBackend will print each one of the measurements
   # Printing :last_interval
   %{datapoint: :last_interval, requests_on: %{action: :info, controller: UsersController}, value: 3}
@@ -79,21 +82,21 @@ defmodule Alchemetrics do
 
   The following measures will be applied:
 
-    - `:p99`: The 99th percentile of the data set.
-    - `:p95`: The 95th percentile of the data set.
-    - `:avg`: The average of the data set.
-    - `:min`: The minimum value at the data set.
-    - `:max`: The maximum value at the data set.
+    - `:p99`: The 99th percentile of the dataset.
+    - `:p95`: The 95th percentile of the dataset.
+    - `:avg`: The average of the dataset.
+    - `:min`: The minimum value at the dataset.
+    - `:max`: The maximum value at the dataset.
     - `:last_interval`: Like in the Increment Data Set, the sum on the last interval is also available here.
     - `:total`: Like in the Increment Data Set, the total sum since the first report is also available here.
 
   ## Params:
     - `value`: The collected value. Can be any integer
-    - `name`: Identifies the data set where this value should be stored. Can be an `atom` or a `KeywordList`.
+    - `name`: Identifies the dataset where this value should be stored. Can be an `atom` or a `KeywordList`.
 
   ## Usage:
 
-  Reports are useful, to report generic values, like a response time for a given route. Therefore, you could create a Plug that reports the response time of a certain route:
+  Reports are useful to report generic values like a response time for a given route. Therefore, you could create a Plug that reports the response time of a certain route:
 
   ```elixir
   defmodule MyApp.Plugs.RequestMeasurer do
@@ -115,7 +118,7 @@ defmodule Alchemetrics do
     end
   end
 
-  # my_app_web/endpoint.ex
+  # You can track any request by pluging it at my_app_web/endpoint.ex
   defmodule MyApp.Endpoint do
     use Phoenix.Endpoint, otp_app: :my_app
 
@@ -135,12 +138,12 @@ defmodule Alchemetrics do
 
   The following measures will be applied:
 
-    - `:last_interval`: The sum of all data set values on the last time interval.
-    - `:total`: The total sum of the data set since the application boot.
+    - `:last_interval`: The sum of all dataset values on the last time interval.
+    - `:total`: The total sum of the dataset since the application boot.
 
   ## Params:
     - `value`: The value to be collected. Can be any integer.
-    - `name`: Identifies the data set where this value should be stored. Can be an `atom` or a `KeywordList`.
+    - `name`: Identifies the dataset where this value should be stored. Can be an `atom` or a `KeywordList`.
   """
   def increment_by(value, name) when is_atom(name), do: increment_by(value, [name: name])
   def increment_by(value, metadata) do
@@ -153,11 +156,11 @@ defmodule Alchemetrics do
 
   The following measures will be applied:
 
-    - `:last_interval`: The sum of all data set values on the last time interval.
-    - `:total`: The total sum of the data set since the application boot.
+    - `:last_interval`: The sum of all dataset values on the last time interval.
+    - `:total`: The total sum of the dataset since the application boot.
 
   ## Params:
-    - `name`: Identifies the data set where this value should be stored. Can be an `atom` or a `KeywordList`.
+    - `name`: Identifies the dataset where this value should be stored. Can be an `atom` or a `KeywordList`.
 
   ## Usage:
   Increments are useful, for example, to count the number of requests on a particular route in a Phoenix application.
