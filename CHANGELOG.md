@@ -1,3 +1,13 @@
+## 0.4.1 (2017-10-17)
+- Reporting execution time of a function
+- Updating GenStage
+
+## 0.4.0 (2017-10-05)
+- Rename Reporter to Backend
+- Remove the need to provide measures when reporting a value
+- Remove the need to give a name to the dataset
+- Improve metadata usage
+
 ## 0.3.0 (2017-08-15)
 - Removed plug dependency
 - Added reporter for debugging: console and logger
