@@ -1,7 +1,7 @@
 <h1 align="center">Alchemetrics</h1>
 
 <p align="center">
-  <img alt="Playkit" src="https://github.com/globocom/alchemetrics/blob/master/assets/alchemetrics.png?raw=true" width="128">
+  <img alt="Alchemetrics" src="https://github.com/globocom/alchemetrics/blob/master/assets/alchemetrics.png?raw=true" width="128">
 </p>
 
 <p align="center">
@@ -12,95 +12,196 @@
   <a href="https://travis-ci.org/globocom/alchemetrics">
     <img alt="Travis" src="https://travis-ci.org/globocom/alchemetrics.svg">
   </a>
-  <a href="https://hex.pm/packages/alchemetrics">
-    <img alt="Hex" src="https://img.shields.io/hexpm/dt/alchemetrics.svg">
-  </a>
   <a href='https://coveralls.io/github/globocom/alchemetrics?branch=master'>
     <img src='https://coveralls.io/repos/github/globocom/alchemetrics/badge.svg?branch=master' alt='Coverage Status' />
   </a>
+  <a href="https://hex.pm/packages/alchemetrics">
+    <img alt="Hex" src="https://img.shields.io/hexpm/dt/alchemetrics.svg">
+  </a>
 </p>
 
-**IMPORTANT: Alchemetrics is under development, so breaking changes are expected!**
-
 ## About
-Alchemetrics makes life easier for anyone who wants to collect and report metrics from an Elixir application.
+Alchemetrics makes life easier for anyone who wants to report and distribute metrics from an Elixir application. The metrics can help you to measure performance, detect errors or track information about your application.
 
-Under the table, Alchemetrics uses Exometer, but you can create custom reporters, set them up, and report metrics without having to write a single line in Erlang.
-
-## Performance
 Alchemetrics makes use of [GenStage](https://hexdocs.pm/gen_stage/GenStage.html) to ensure that collecting and submitting metrics will not impact application performance.
 
-Each metric report creates a new event that follows the GenStage flow. With the help of the [ConsumerSupervisor](https://hexdocs.pm/gen_stage/ConsumerSupervisor.html), which creates a new process for each of them, they are handled by the reporters.
+Each metric report creates a new event that follows the GenStage flow. With the help of the [ConsumerSupervisor](https://hexdocs.pm/gen_stage/ConsumerSupervisor.html), your metrics are distributed with little impact to the application performance.
 
-The maximum number of processes is a configurable parameter. With more processes, the accuracy of values is higher, but the performance impact will also be greater.
+## Reports
+Reports are made via calls to Alchemetrics functions. It is through reports that Alchemetrics stores a value for it to be measured and sent to the backends. Further details about reports can be found in the documentation available in HexDocs.
 
-## Debugging
-Alchemetrics comes with a reporter called Alchemetrics.LoggerReporter, which just write all the stuff it receives into debug logs. It can be useful to visualize how reporters are receiving metrics from your application.
 
-Please note that Alchemetrics allows multiple reporters to be used at the same time and each of them will receive the metrics in the same way.
+## Backends
+Collected metrics are typically stored in some type of datastore, such as Logstash and Influxdb. Alchemetrics uses the concept of backends to distribute the metrics to these data stores. More details can be found in the documentation about custom backends.
 
-### Example:
-```
-iex(1)> Alchemetrics.ReporterStarter.start_reporter(Alchemetrics.LoggerReporter, [application: "MyApp"])
-:ok
-iex(2)>
-23:20:40.695 [debug] Starting Elixir.Alchemetrics.LoggerReporter with following options: [application: "MyApp"]
-iex(2)> Alchemetrics.report("some_metric", 1)
-:ok
-iex(3)>
-23:21:12.691 [debug] Reporting: %{metric: :last_interval, name: "some_metric", options: [metadata: [], application: "MyApp"], value: 1}
-```
+When a dataset is created, it subscribes to all backends enabled on the application. Datasets created before a backend is enabled will not subscribe to the new backend. Also, when a backend is disabled, all datasets will unsubscribe from it.
 
-## Creating your own custom reporters
-A custom reporter is a module that implements a behavior.
+### ConsoleBackend
+Alchemetrics comes with a built-in backend called `Alchemetrics.ConsoleBackend`. This backend sends yor metrics to the console and is very useful when debugging.
 
-It should make use of the `Alchemetrics.CustomReporter.__using__` macro and implement two functions: `init/1` and `report/4`.
+You can enable ConsoleBackend when your application boot by adding it to yor backend list:
 
 ```elixir
-## my_app/metrics/my_reporter.ex
+# config/config.exs
 
-defmodule MyApp.Metrics.MyReporter do
-  use Alchemetrics.CustomReporter
+config :alchemetrics,
+  reporter_list: [
+    [module: Alchemetrics.ConsoleReporter, opts: []]
+  ]
+```
 
-  def init(opts) do
-    IO.puts "I'm called once the reporter is started! My options: #{inspect opts}"
-  end
+You can also enable it on the console:
 
-  def report(name, metric, value, opts) do
-    IO.puts "I am called every time a metric is sent from this reporter! #{name} | #{metric} | #{value} | #{inspect opts}"
+```elixir
+# iex -S mix
+
+iex(1)> Alchemetrics.ConsoleBackend.enable
+Starting Elixir.Alchemetrics.ConsoleBackend with following options: []
+:ok
+iex(2)> Alchemetrics.report(100, :test)
+:ok
+iex(3)> %{datapoint: :avg, name: :test, options: [], value: 100}
+%{datapoint: :max, name: :test, options: [], value: 100}
+%{datapoint: :min, name: :test, options: [], value: 100}
+%{datapoint: :p95, name: :test, options: [], value: 100}
+%{datapoint: :p99, name: :test, options: [], value: 100}
+%{datapoint: :last_interval, name: :test, options: [], value: 100}
+%{datapoint: :total, name: :test, options: [], value: 100}
+```
+
+## Erlang VM metrics
+Alchemetrics automatically collects some information about Erlang's VM, like memory and run queue. This is disabled by default, but you can enable it on the configs:
+
+```elixir
+# config/config.exs
+config :alchemetrics, instrument_beam: true
+```
+
+This will enable the report of some data from Erlang's VM:
+
+```elixir
+%{datapoint: :memory_atom, options: [], type: :memory, value: 621465}
+%{datapoint: :memory_binary, options: [], type: :memory, value: 392504}
+%{datapoint: :memory_ets, options: [], type: :memory, value: 1365728}
+%{datapoint: :memory_processes, options: [], type: :memory, value: 10513080}
+%{datapoint: :memory_total, options: [], type: :memory, value: 38397232}
+%{datapoint: :system_runqueue, options: [], type: :system, value: 1}
+```
+
+### Getting Started: Instrumenting requests on a Phoenix application
+Some data that is usually reported is the throughput and response time of an Phoenix application route. With the help of Plug, you can instrument your HTTP very simply using Alchemetrics. The following example will show a very basic `plug` that instruments all routes of a Phoenix application named `my_app`.
+
+Anything available at the moment a request arrives at the application endpoint can be reported. In this example, we will notify to Alchemetrics the request method, path and response status.
+
+First, make sure you have a backend to send your metrics. We will use `Alchemetrics.ConsoleBackend`.
+
+```elixir
+# config/config.exs
+
+config :alchemetrics,
+  reporter_list: [
+    [module: Alchemetrics.ConsoleBackend, opts: []]
+  ]
+```
+
+Create the RequestInstrumentor plug:
+
+```elixir
+# lib/my_app_web/plugs/request_count.ex
+
+defmodule RequestInstrumentor do
+  @behaviour Plug
+
+  def init(opts \\ []), do: opts
+  def call(conn, opts), do: count_request(conn)
+
+  defp count_request(conn) do
+    start = System.monotonic_time()
+    Plug.Conn.register_before_send(conn, fn conn ->
+      stop = System.monotonic_time()
+      diff = System.convert_time_unit(stop - start, :native, :micro_seconds)
+      Alchemetrics.increment(throughput_at: %{method: conn.method, path: conn.request_path, status: conn.status})
+      Alchemetrics.report(diff, request_time: %{method: conn.method, path: conn.request_path, status: conn.status})
+      conn
+    end)
   end
 end
 ```
-And let's check our reporter at `iex`:
 
+Plug it on Phoenix Endpoint:
+
+```elixir
+defmodule MyAppWeb.Endpoint do
+  use Phoenix.Endpoint, otp_app: :my_app
+
+  plug RequestInstrumentor
+  ...
+end
 ```
-iex(1)> Alchemetrics.ReporterStarter.start_reporter(MyApp.Metrics.MyReporter,  [owner: "my_team"])
-:ok
-I'm called once the reporter is started! My options: [owner: "my_team"]
-iex(2)> Alchemetrics.report("my_metric", 1000)
-:ok
-iex(3)> I am called every time a metric is sent from this reporter! my_metric | last_interval | 1000 | [metadata: [], owner: "my_team"]
+
+Now your application is read to instrument any request.
+
+```bash
+$ mix phx.server
+$ curl localhost:4000/
 ```
 
-## Concepts
-### Reports
-A report is an event that happens when a Reporter sends the data to its destination. For Alchmetrics, it consists of a name, a metric, and a value.
+Check the metrics being sent to the console!
 
-The name is anything that makes sense. It may be something to indicate that the metric in question represents the number of queries in the database or the response time of a certain action, for example.
-
-The metric is the type of calculation that was done on the collected data, for example the average or the sum of the values collected in the last interval.
-
-Finally, the value is the result of the calculation made on the database, according to the metric.
-
-In the following example, we are reporting two types of metric: one that calculates the average (`:avg`) and another the sum of all values collected in the last interval (`:last_inteval`). Each line of debug log represents a report.
-
-### Example:
+```elixir
+[info] GET /
+[debug] Processing with AlchemetricsPhoenixWeb.ApiController.info/2
+  Parameters: %{}
+  Pipelines: [:api]
+[info] Sent 200 in 16ms
+%{datapoint: :last_interval, options: [],
+  requests_for: %{method: "GET", path: "/", status: 200}, value: 1}
+%{datapoint: :total, options: [],
+  requests_for: %{method: "GET", path: "/", status: 200}, value: 1}
+%{datapoint: :avg, options: [],
+  request_time: %{method: "GET", path: "/", status: 200}, value: 44069}
+%{datapoint: :max, options: [],
+  request_time: %{method: "GET", path: "/", status: 200}, value: 44069}
+%{datapoint: :min, options: [],
+  request_time: %{method: "GET", path: "/", status: 200}, value: 44069}
+%{datapoint: :p95, options: [],
+  request_time: %{method: "GET", path: "/", status: 200}, value: 44069}
+%{datapoint: :p99, options: [],
+  request_time: %{method: "GET", path: "/", status: 200}, value: 44069}
+%{datapoint: :last_interval, options: [],
+  request_time: %{method: "GET", path: "/", status: 200}, value: 44069}
+%{datapoint: :total, options: [],
+  request_time: %{method: "GET", path: "/", status: 200}, value: 44069}
 ```
-iex(3)> Alchemetrics.report("my_value", 99, %{metrics: [:avg, :last_interval]})
-:ok
-iex(4)> Alchemetrics.report("my_value", 1, %{metrics: [:avg, :last_interval]})
-:ok
-iex(5)>
-00:26:58.084 [debug] Reporting: %{metric: :avg, name: "my_value", options: [metadata: []], value: 50}
-00:26:58.084 [debug] Reporting: %{metric: :last_interval, name: "my_value", options: [metadata: []], value: 100}
+
+If you request an inexistent route, the reports will show 404 status code:
+
+```elixir
+%{datapoint: :last_interval, options: [],
+  requests_for: %{method: "GET", path: "/invalid_route", status: 404}, value: 1}
+%{datapoint: :total, options: [],
+  requests_for: %{method: "GET", path: "/invalid_route", status: 404}, value: 1}
+%{datapoint: :avg, options: [],
+  request_time: %{method: "GET", path: "/invalid_route", status: 404},
+  value: 39558}
+%{datapoint: :max, options: [],
+  request_time: %{method: "GET", path: "/invalid_route", status: 404},
+  value: 39558}
+%{datapoint: :min, options: [],
+  request_time: %{method: "GET", path: "/invalid_route", status: 404},
+  value: 39558}
+%{datapoint: :p95, options: [],
+  request_time: %{method: "GET", path: "/invalid_route", status: 404},
+  value: 39558}
+%{datapoint: :p99, options: [],
+  request_time: %{method: "GET", path: "/invalid_route", status: 404},
+  value: 39558}
+%{datapoint: :last_interval, options: [],
+  request_time: %{method: "GET", path: "/invalid_route", status: 404},
+  value: 39558}
+%{datapoint: :total, options: [],
+  request_time: %{method: "GET", path: "/invalid_route", status: 404},
+  value: 39558}
 ```
+
+For more details about reports, metrics, datasets, backends and all Alchemetrics concepts, take a look at the docs.

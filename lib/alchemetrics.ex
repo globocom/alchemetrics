@@ -8,7 +8,7 @@ defmodule Alchemetrics do
   All reported values follow the same flow:
     1. They are stored in a dataset and stay there for a configurable time span;
     2. After that time span the dataset is measured. Various measurements are made on the dataset;
-    3. The measurement results are sent to the backends;
+    3. The measurement results are sent to some `Alchemetrics.CustomBackend`;
     4. The dataset is reset.
 
   This document provides a detailed explanation about each one of those steps.
