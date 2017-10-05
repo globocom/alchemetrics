@@ -72,12 +72,12 @@ defmodule Alchemetrics.CustomBackend do
   end
   ```
 
-  You can configure your brand new reporter to be enabled when application boots. The `opts` key will be passed as argument to the `c:init/1` function.
+  You can configure your brand new reporter to be enabled when application boots. The array in the config key will be passed as argument to the `c:init/1` function.
 
   ```elixir
   # config/config.exs
-  config :alchemetrics, reporter_list: [
-    [module: MyApp.Backends.UDP, opts: [hostname: "logstash.mycorp.com", port: 8888]]
+  config :alchemetrics, backends: [
+    {MyApp.Backends.UDP, [hostname: "logstash.mycorp.com", port: 8888]}
   ]
   ```
   """
