@@ -28,7 +28,7 @@ Alchemetrics makes use of [GenStage](https://hexdocs.pm/gen_stage/GenStage.html)
 Each metric report creates a new event that follows the GenStage flow. With the help of the [ConsumerSupervisor](https://hexdocs.pm/gen_stage/ConsumerSupervisor.html), your metrics are distributed with little impact to the application performance.
 
 ## Reports
-Reports are made via calls to Alchemetrics functions. It is through reports that Alchemetrics stores a value for it to be measured and sent to the backends. Further details about reports can be found in the documentation available in HexDocs.
+Reports are made via calls to Alchemetrics functions. It is through reports that Alchemetrics stores a value to be measured and sent to the backends. Further details about reports can be found in the documentation available in HexDocs.
 
 
 ## Backends
@@ -89,11 +89,14 @@ This will enable the report of some data from Erlang's VM:
 ```
 
 ### Getting Started: Instrumenting requests on a Phoenix application
-Some data that is usually reported is the throughput and response time of an Phoenix application route. With the help of Plug, you can instrument your HTTP very simply using Alchemetrics. The following example will show a very basic `plug` that instruments all routes of a Phoenix application named `my_app`.
+Let's show an example of how Alchemetrics could be used to instrument a Phoenix application with the help of Plug:
 
-Anything available at the moment a request arrives at the application endpoint can be reported. In this example, we will notify to Alchemetrics the request method, path and response status.
+In this example application we will measure:
 
-First, make sure you have a backend to send your metrics. We will use `Alchemetrics.ConsoleBackend`.
+  - The **number of requests** for each route of the application grouped by the status of the response;
+  - The **response times** (`average`, `percentiles`, `max` and `min`) of each route;
+
+The collected metrics will be printed to the console by `Alchemetrics.ConsoleBackend`. To do this, we need to enable it in the settings:
 
 ```elixir
 # config/config.exs
@@ -104,7 +107,7 @@ config :alchemetrics,
   ]
 ```
 
-Create the RequestInstrumentor plug:
+>> Let's create the RequestInstrumentor plug:
 
 ```elixir
 # lib/my_app_web/plugs/request_count.ex
@@ -120,15 +123,17 @@ defmodule RequestInstrumentor do
     Plug.Conn.register_before_send(conn, fn conn ->
       stop = System.monotonic_time()
       diff = System.convert_time_unit(stop - start, :native, :micro_seconds)
-      Alchemetrics.increment(throughput_at: %{method: conn.method, path: conn.request_path, status: conn.status})
-      Alchemetrics.report(diff, request_time: %{method: conn.method, path: conn.request_path, status: conn.status})
+      # report throughput
+      Alchemetrics.increment(request_count: %{method: conn.method, path: conn.request_path, status: conn.status})
+      # report request time
+      Alchemetrics.report(diff, request_time: %{method: conn.method, path: conn.request_path})
       conn
     end)
   end
 end
 ```
 
-Plug it on Phoenix Endpoint:
+>> Plug it on Phoenix Endpoint:
 
 ```elixir
 defmodule MyAppWeb.Endpoint do
@@ -139,69 +144,39 @@ defmodule MyAppWeb.Endpoint do
 end
 ```
 
-Now your application is read to instrument any request.
+>> Request your application:
 
 ```bash
 $ mix phx.server
 $ curl localhost:4000/
 ```
 
-Check the metrics being sent to the console!
+>> Information about the request will show on application console:
 
 ```elixir
-[info] GET /
-[debug] Processing with AlchemetricsPhoenixWeb.ApiController.info/2
-  Parameters: %{}
-  Pipelines: [:api]
-[info] Sent 200 in 16ms
-%{datapoint: :last_interval, options: [],
-  requests_for: %{method: "GET", path: "/", status: 200}, value: 1}
-%{datapoint: :total, options: [],
-  requests_for: %{method: "GET", path: "/", status: 200}, value: 1}
-%{datapoint: :avg, options: [],
-  request_time: %{method: "GET", path: "/", status: 200}, value: 44069}
-%{datapoint: :max, options: [],
-  request_time: %{method: "GET", path: "/", status: 200}, value: 44069}
-%{datapoint: :min, options: [],
-  request_time: %{method: "GET", path: "/", status: 200}, value: 44069}
-%{datapoint: :p95, options: [],
-  request_time: %{method: "GET", path: "/", status: 200}, value: 44069}
-%{datapoint: :p99, options: [],
-  request_time: %{method: "GET", path: "/", status: 200}, value: 44069}
-%{datapoint: :last_interval, options: [],
-  request_time: %{method: "GET", path: "/", status: 200}, value: 44069}
-%{datapoint: :total, options: [],
-  request_time: %{method: "GET", path: "/", status: 200}, value: 44069}
+%{datapoint: :last_interval, options: [], requests_for: %{method: "GET", path: "/", status: 200}, value: 1}
+%{datapoint: :total, options: [], requests_for: %{method: "GET", path: "/", status: 200}, value: 1}
+%{datapoint: :avg, options: [], request_time: %{method: "GET", path: "/", status: 200}, value: 44069}
+%{datapoint: :max, options: [], request_time: %{method: "GET", path: "/", status: 200}, value: 44069}
+%{datapoint: :min, options: [], request_time: %{method: "GET", path: "/", status: 200}, value: 44069}
+%{datapoint: :p95, options: [], request_time: %{method: "GET", path: "/", status: 200}, value: 44069}
+%{datapoint: :p99, options: [], request_time: %{method: "GET", path: "/", status: 200}, value: 44069}
+%{datapoint: :last_interval, options: [], request_time: %{method: "GET", path: "/", status: 200}, value: 44069}
+%{datapoint: :total, options: [], request_time: %{method: "GET", path: "/", status: 200}, value: 44069}
 ```
 
-If you request an inexistent route, the reports will show 404 status code:
+>> If you request an inexistent route, the reports will show 404 status code:
 
 ```elixir
-%{datapoint: :last_interval, options: [],
-  requests_for: %{method: "GET", path: "/invalid_route", status: 404}, value: 1}
-%{datapoint: :total, options: [],
-  requests_for: %{method: "GET", path: "/invalid_route", status: 404}, value: 1}
-%{datapoint: :avg, options: [],
-  request_time: %{method: "GET", path: "/invalid_route", status: 404},
-  value: 39558}
-%{datapoint: :max, options: [],
-  request_time: %{method: "GET", path: "/invalid_route", status: 404},
-  value: 39558}
-%{datapoint: :min, options: [],
-  request_time: %{method: "GET", path: "/invalid_route", status: 404},
-  value: 39558}
-%{datapoint: :p95, options: [],
-  request_time: %{method: "GET", path: "/invalid_route", status: 404},
-  value: 39558}
-%{datapoint: :p99, options: [],
-  request_time: %{method: "GET", path: "/invalid_route", status: 404},
-  value: 39558}
-%{datapoint: :last_interval, options: [],
-  request_time: %{method: "GET", path: "/invalid_route", status: 404},
-  value: 39558}
-%{datapoint: :total, options: [],
-  request_time: %{method: "GET", path: "/invalid_route", status: 404},
-  value: 39558}
+%{datapoint: :last_interval, options: [], requests_for: %{method: "GET", path: "/invalid_route", status: 404}, value: 1}
+%{datapoint: :total, options: [], requests_for: %{method: "GET", path: "/invalid_route", status: 404}, value: 1}
+%{datapoint: :avg, options: [], request_time: %{method: "GET", path: "/invalid_route", status: 404}, value: 39558}
+%{datapoint: :max, options: [], request_time: %{method: "GET", path: "/invalid_route", status: 404}, value: 39558}
+%{datapoint: :min, options: [], request_time: %{method: "GET", path: "/invalid_route", status: 404}, value: 39558}
+%{datapoint: :p95, options: [], request_time: %{method: "GET", path: "/invalid_route", status: 404}, value: 39558}
+%{datapoint: :p99, options: [], request_time: %{method: "GET", path: "/invalid_route", status: 404}, value: 39558}
+%{datapoint: :last_interval, options: [], request_time: %{method: "GET", path: "/invalid_route", status: 404}, value: 39558}
+%{datapoint: :total, options: [], request_time: %{method: "GET", path: "/invalid_route", status: 404}, value: 39558}
 ```
 
 For more details about reports, metrics, datasets, backends and all Alchemetrics concepts, take a look at the docs.
