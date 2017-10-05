@@ -107,7 +107,7 @@ config :alchemetrics,
   ]
 ```
 
->> Let's create the RequestInstrumentor plug:
+> Let's create the RequestInstrumentor plug:
 
 ```elixir
 # lib/my_app_web/plugs/request_count.ex
@@ -133,7 +133,7 @@ defmodule RequestInstrumentor do
 end
 ```
 
->> Plug it on Phoenix Endpoint:
+> Plug it on Phoenix Endpoint:
 
 ```elixir
 defmodule MyAppWeb.Endpoint do
@@ -144,14 +144,14 @@ defmodule MyAppWeb.Endpoint do
 end
 ```
 
->> Request your application:
+> Request your application:
 
 ```bash
 $ mix phx.server
 $ curl localhost:4000/
 ```
 
->> Information about the request will show on application console:
+> Information about the request will show on application console:
 
 ```elixir
 %{datapoint: :last_interval, options: [], requests_for: %{method: "GET", path: "/", status: 200}, value: 1}
@@ -165,7 +165,7 @@ $ curl localhost:4000/
 %{datapoint: :total, options: [], request_time: %{method: "GET", path: "/", status: 200}, value: 44069}
 ```
 
->> If you request an inexistent route, the reports will show 404 status code:
+> If you request an inexistent route, the reports will show 404 status code:
 
 ```elixir
 %{datapoint: :last_interval, options: [], requests_for: %{method: "GET", path: "/invalid_route", status: 404}, value: 1}
