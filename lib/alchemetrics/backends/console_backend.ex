@@ -21,12 +21,12 @@ defmodule Alchemetrics.ConsoleBackend do
   ```
 
   ## Starting on application boot
-  To start `Alchemetrics.ConsoleBackend` at application boot, just add it to the `:reporter_list` config option. Start up parameters are set in `opts` option.
+  To start `Alchemetrics.ConsoleBackend` at application boot, just add it to the `:backends` config option. Start up parameters are set in `opts` option.
 
   ```elixir
   # on config/config.exs
-  config :alchemetrics, reporter_list: [
-    [module: Alchemetrics.ConsoleBackend, opts: []]
+  config :alchemetrics, backends: [
+    {Alchemetrics.ConsoleBackend, []}
   ]
   ```
   """

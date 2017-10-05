@@ -6,18 +6,18 @@ defmodule Alchemetrics.BackendStarter do
   end
 
   def init(:ok) do
-    reporter_list = Application.get_env :alchemetrics, :reporter_list, []
-    reporter_list
-    |> Enum.each(fn(reporter) ->
-      :exometer_report.add_reporter(reporter[:module], reporter[:opts])
+    backends = Application.get_env :alchemetrics, :backends, []
+    backends
+    |> Enum.each(fn({module, init_options}) ->
+      :exometer_report.add_reporter(module, init_options)
     end)
     {:ok, :added}
   end
 
-  def start_reporter(module, opts), do: GenServer.cast(__MODULE__, {:add_reporter, [module: module, opts: opts]})
+  def start_reporter(module, init_options), do: GenServer.cast(__MODULE__, {:add_reporter, [module: module, init_options: init_options]})
 
-  def handle_cast({:add_reporter, [module: module, opts: opts]}, state) do
-    :exometer_report.add_reporter(module, opts)
+  def handle_cast({:add_reporter, [module: module, init_options: init_options]}, state) do
+    :exometer_report.add_reporter(module, init_options)
     {:noreply, state}
   end
 end

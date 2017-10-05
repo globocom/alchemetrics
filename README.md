@@ -39,14 +39,14 @@ When a dataset is created, it subscribes to all backends enabled on the applicat
 ### ConsoleBackend
 Alchemetrics comes with a built-in backend called `Alchemetrics.ConsoleBackend`. This backend sends yor metrics to the console and is very useful when debugging.
 
-You can enable ConsoleBackend when your application boot by adding it to yor backend list:
+You can enable `Alchemetrics.ConsoleBackend` when your application boot by adding it to yor backend list:
 
 ```elixir
 # config/config.exs
 
 config :alchemetrics,
-  reporter_list: [
-    [module: Alchemetrics.ConsoleReporter, opts: []]
+  backends: [
+    {Alchemetrics.ConsoleReporter, []}
   ]
 ```
 
@@ -102,8 +102,8 @@ The collected metrics will be printed to the console by `Alchemetrics.ConsoleBac
 # config/config.exs
 
 config :alchemetrics,
-  reporter_list: [
-    [module: Alchemetrics.ConsoleBackend, opts: []]
+  backends: [
+    [module: Alchemetrics.ConsoleBackend, []]
   ]
 ```
 

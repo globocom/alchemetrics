@@ -7,7 +7,7 @@ defmodule Alchemetrics.BackendStarterTest do
   end
 
   describe "#init" do
-    test "starts all reporters on the :reporter_list apllication variable" do
+    test "starts all reporters on the :backends apllication variable" do
       Alchemetrics.BackendStarter.init(:ok)
       assert [{FakeBackend, _}] = :exometer_report.list_reporters
     end
