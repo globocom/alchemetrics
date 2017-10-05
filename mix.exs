@@ -53,7 +53,7 @@
   # Type "mix help deps" for more examples and options
   defp deps do
     [
-      {:gen_stage, "~> 0.11"},
+      {:gen_stage, "~> 0.12"},
       {:exometer_core, "~> 1.0", hex: :basho_exometer_core},
 
       {:ex_doc, ">= 0.0.0", only: :dev},
