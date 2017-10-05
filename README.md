@@ -27,12 +27,14 @@ Alchemetrics makes use of [GenStage](https://hexdocs.pm/gen_stage/GenStage.html)
 
 Each metric report creates a new event that follows the GenStage flow. With the help of the [ConsumerSupervisor](https://hexdocs.pm/gen_stage/ConsumerSupervisor.html), your metrics are distributed with little impact to the application performance.
 
+Documentation is available at [HexDocs](https://hexdocs.pm/alchemetrics/0.4.0/api-reference.html)
+
 ## Reports
-Reports are made via calls to Alchemetrics functions. It is through reports that Alchemetrics stores a value to be measured and sent to the backends. Further details about reports can be found in the documentation available in HexDocs.
+Reports are made via calls to Alchemetrics functions. It is through reports that Alchemetrics stores a value to be measured and sent to the backends. Further details about reports can be found in the [documentation available in HexDocs](https://hexdocs.pm/alchemetrics/0.4.0/Alchemetrics.html).
 
 
 ## Backends
-Collected metrics are typically stored in some type of datastore, such as Logstash and Influxdb. Alchemetrics uses the concept of backends to distribute the metrics to these data stores. More details can be found in the documentation about custom backends.
+Collected metrics are typically stored in some type of datastore, such as Logstash and Influxdb. Alchemetrics uses the concept of backends to distribute the metrics to these data stores. More details can be found in the [documentation about custom backends](https://hexdocs.pm/alchemetrics/0.4.0/Alchemetrics.CustomBackend.html).
 
 When a dataset is created, it subscribes to all backends enabled on the application. Datasets created before a backend is enabled will not subscribe to the new backend. Also, when a backend is disabled, all datasets will unsubscribe from it.
 
@@ -179,4 +181,4 @@ $ curl localhost:4000/
 %{datapoint: :total, options: [], request_time: %{method: "GET", path: "/invalid_route", status: 404}, value: 39558}
 ```
 
-For more details about reports, metrics, datasets, backends and all Alchemetrics concepts, take a look at the docs.
+For more details about reports, metrics, datasets, backends and all Alchemetrics concepts, take a look at the [docs](https://hexdocs.pm/alchemetrics/0.4.0/api-reference.html).
