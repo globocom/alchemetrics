@@ -3,6 +3,7 @@
     "treat_no_relevant_lines_as_covered": true
   },
   "skip_files": [
-    "lib/alchemetrics/backends/console_backend.ex"
+    "lib/alchemetrics/backends/console_backend.ex",
+    "lib/alchemetrics/annotation/"
   ]
 }
