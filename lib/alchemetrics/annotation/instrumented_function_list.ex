@@ -1,6 +1,8 @@
 defmodule Alchemetrics.Annotation.InstrumentedFunctionList do
   @function_list_tag :instrumented_functions
 
+  @moduledoc false
+
   alias Alchemetrics.Annotation.Function
 
   def track_module(module) do
