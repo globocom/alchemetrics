@@ -27,14 +27,30 @@ Alchemetrics makes use of [GenStage](https://hexdocs.pm/gen_stage/GenStage.html)
 
 Each metric report creates a new event that follows the GenStage flow. With the help of the [ConsumerSupervisor](https://hexdocs.pm/gen_stage/ConsumerSupervisor.html), your metrics are distributed with little impact to the application performance.
 
-Documentation is available at [HexDocs](https://hexdocs.pm/alchemetrics/0.4.0/api-reference.html)
+Documentation is available at [HexDocs](https://hexdocs.pm/alchemetrics/api-reference.html)
 
 ## Reports
-Reports are made via calls to Alchemetrics functions. It is through reports that Alchemetrics stores a value to be measured and sent to the backends. Further details about reports can be found in the [documentation available in HexDocs](https://hexdocs.pm/alchemetrics/0.4.0/Alchemetrics.html).
+Reports are made via calls to Alchemetrics functions. It is through reports that Alchemetrics stores a value to be measured and sent to the backends. Further details about reports can be found in the [documentation available in HexDocs](https://hexdocs.pm/alchemetrics/Alchemetrics.html).
 
+## Annotations
+Annotations can be very useful for finding performance bottlenecks in an application. They allow you to automatically report the amount of calls and time spent on a particular function.
+
+They work with multiple clauses, guard clauses, recursion, function heads, and so on. To annotate a function simply mark it with the tag `@alchemetrics instrument_function: true`.
+
+```elixir
+defmodule AnnotatedModule do
+  use Alchemetrics.Annotation
+
+  @alchemetrics instrument_function: true
+  def annotated_function, do: IO.puts "I will be instrumented :)"
+
+  def not_annotated, do: IO.puts "I will not be instrumented :("
+end
+```
+Further details about annotations can be found in the [documentation available in HexDocs](https://hexdocs.pm/alchemetrics/Alchemetrics.Annotation.html).
 
 ## Backends
-Collected metrics are typically stored in some type of datastore, such as Logstash and Influxdb. Alchemetrics uses the concept of backends to distribute the metrics to these data stores. More details can be found in the [documentation about custom backends](https://hexdocs.pm/alchemetrics/0.4.0/Alchemetrics.CustomBackend.html).
+Collected metrics are typically stored in some type of datastore, such as Logstash and Influxdb. Alchemetrics uses the concept of backends to distribute the metrics to these data stores. More details can be found in the [documentation about custom backends](https://hexdocs.pm/alchemetrics/Alchemetrics.CustomBackend.html).
 
 When a dataset is created, it subscribes to all backends enabled on the application. Datasets created before a backend is enabled will not subscribe to the new backend. Also, when a backend is disabled, all datasets will unsubscribe from it.
 
@@ -181,4 +197,4 @@ $ curl localhost:4000/
 %{datapoint: :total, options: [], request_time: %{method: "GET", path: "/invalid_route", status: 404}, value: 39558}
 ```
 
-For more details about reports, metrics, datasets, backends and all Alchemetrics concepts, take a look at the [docs](https://hexdocs.pm/alchemetrics/0.4.0/api-reference.html).
+For more details about reports, metrics, datasets, backends and all Alchemetrics concepts, take a look at the [docs](https://hexdocs.pm/alchemetrics/api-reference.html).

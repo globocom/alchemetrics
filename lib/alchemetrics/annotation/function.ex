@@ -6,6 +6,8 @@ defmodule Alchemetrics.Annotation.Function do
 
   @metric_tag :alchemetrics
 
+  @moduledoc false
+
   def new(env, kind, name, args, guards, body) do
     %Function{
      env: env,

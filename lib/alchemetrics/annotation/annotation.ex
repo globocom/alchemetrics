@@ -5,12 +5,10 @@ defmodule Alchemetrics.Annotation do
   @moduledoc """
   Annotations allow you to automatically report the amount of calls and time spent on a particular function.
 
-  Annotations work with multiple clauses, guard clauses, recursion, function heads, and so on. However, only public functions can be annotated. The return value of annotated functions does not change.
+  They work with multiple clauses, guard clauses, recursion, function heads, and so on. However, only public functions can be annotated. The return value of annotated functions does not change.
 
   ## Example
-  To annotate a function simply mark the function with the tag @alchemetrics instrument_function: true.
-
-  When a function is annotated, all functions defined in the module with the same name and arity will also be marked for instrumentation.
+  To annotate a function simply mark it with the tag `@alchemetrics instrument_function: true`. All functions defined in the module with the same name and arity will also be marked for instrumentation.
 
   ```elixir
   defmodule AnnotatedModule do
@@ -35,26 +33,27 @@ defmodule Alchemetrics.Annotation do
     def head(a), do: a
   end
   ```
-  ## Report Format
 
+  ## Report Format
   The annotated functions will be reported in the following formats:
     - `function_time_spent: "Elixir.Module.function/arity"`
     - `function_calls: "Elixir.Module.function/arity"`
 
   ```elixir
   iex(1)> Alchemetrics.ConsoleBackend.enable
-  iex(2)> FakeAnnotatedModule.annotated_function
+  iex(2)> AnnotatedModule.annotated_function
   I will be instrumented :)
   :ok
-  iex(3)> %{datapoint: :last_interval, function_calls: "Elixir.FakeAnnotatedModule.annotated_function/0", options: [], value: 1}
-  %{datapoint: :total, function_calls: "Elixir.FakeAnnotatedModule.annotated_function/0", options: [], value: 1}
-  %{datapoint: :avg, function_time_spent: "Elixir.FakeAnnotatedModule.annotated_function/0", options: [], value: 0}
-  %{datapoint: :max, function_time_spent: "Elixir.FakeAnnotatedModule.annotated_function/0", options: [], value: 0}
-  %{datapoint: :min, function_time_spent: "Elixir.FakeAnnotatedModule.annotated_function/0", options: [], value: 0}
-  %{datapoint: :p95, function_time_spent: "Elixir.FakeAnnotatedModule.annotated_function/0", options: [], value: 0}
-  %{datapoint: :p99, function_time_spent: "Elixir.FakeAnnotatedModule.annotated_function/0", options: [], value: 0}
-  %{datapoint: :last_interval, function_time_spent: "Elixir.FakeAnnotatedModule.annotated_function/0", options: [], value: 4541}
-  %{datapoint: :total, function_time_spent: "Elixir.FakeAnnotatedModule.annotated_function/0", options: [], value: 4541}
+  iex(3)>
+  %{datapoint: :last_interval, function_calls: "Elixir.AnnotatedModule.annotated_function/0", value: 1}
+  %{datapoint: :total, function_calls: "Elixir.AnnotatedModule.annotated_function/0", value: 1}
+  %{datapoint: :avg, function_time_spent: "Elixir.AnnotatedModule.annotated_function/0", value: 0}
+  %{datapoint: :max, function_time_spent: "Elixir.AnnotatedModule.annotated_function/0", value: 0}
+  %{datapoint: :min, function_time_spent: "Elixir.AnnotatedModule.annotated_function/0", value: 0}
+  %{datapoint: :p95, function_time_spent: "Elixir.AnnotatedModule.annotated_function/0", value: 0}
+  %{datapoint: :p99, function_time_spent: "Elixir.AnnotatedModule.annotated_function/0", value: 0}
+  %{datapoint: :last_interval, function_time_spent: "Elixir.AnnotatedModule.annotated_function/0", value: 4541}
+  %{datapoint: :total, function_time_spent: "Elixir.AnnotatedModule.annotated_function/0", value: 4541}
   ```
   """
 
