@@ -127,11 +127,18 @@ defmodule Alchemetrics do
   end
   ```
   """
+  def report(metadata, function) when is_function(function) do
+    {execution_time_in_microseconds, returned_value} = :timer.tc(function)
+    Alchemetrics.report(execution_time_in_microseconds, metadata)
+    returned_value
+  end
+
   def report(value, name) when is_atom(name), do: report(value, [name: name])
   def report(value, metadata) do
     create_event(value, metadata, Alchemetrics.Exometer.Datapoints.histogram)
     |> Producer.enqueue
   end
+
 
   @doc """
   Similar to `increment/1`, but accept any value other than 1.
