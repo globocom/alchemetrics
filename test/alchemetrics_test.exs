@@ -1,6 +1,7 @@
 defmodule AlchemetricsTest do
   use ExUnit.Case
   import Mock
+  import Matchers
   alias Alchemetrics.Producer
 
   @histogram_event %Alchemetrics.Event{
@@ -15,7 +16,18 @@ defmodule AlchemetricsTest do
     value: 2
   }
 
-  describe "#report" do
+  defmacro mock_basic_report(expression) do
+    quote do
+      with_mock Alchemetrics, [:passthrough], [report: fn
+          _, value when not(is_function(value)) -> nil
+          value, metadata -> :meck.passthrough([value, metadata])
+      end] do
+        unquote(expression)
+      end
+    end
+  end
+
+  describe "#report(value, metadata)" do
     test_with_mock "enqueue an event with the given value and metadata and with histogram datapoints", Alchemetrics.Producer, [:passthrough], [] do
       Alchemetrics.report(100, measure: :test_elapsed_time)
       assert called Producer.enqueue(@histogram_event)
@@ -45,6 +57,29 @@ defmodule AlchemetricsTest do
       Alchemetrics.report(100, :something)
       event = %Alchemetrics.Event{@histogram_event | metadata: [name: :something]}
       assert called Producer.enqueue(event)
+    end
+  end
+
+  describe "#report(metadata, function)" do
+    @execution_time 100_000 # microseconds
+
+    test "call report with the time (in microseconds) spent on the block execution" do
+      mock_basic_report do
+        Alchemetrics.report([measure: :test_elapsed_time], fn ->
+          # execute code to measure execution time
+          Process.sleep(@execution_time |> div(1000))
+        end)
+        assert called Alchemetrics.report(close_to(@execution_time), measure: :test_elapsed_time)
+      end
+    end
+
+    test "repass block's return" do
+      mock_basic_report do
+        returned = Alchemetrics.report([measure: :test_elapsed_time], fn ->
+          :code_return
+        end)
+        assert returned == :code_return
+      end
     end
   end
 
