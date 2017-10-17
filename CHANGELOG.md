@@ -1,4 +1,4 @@
-## 0.4.1 (2017-10-17)
+## 0.5.0 (2017-10-17)
 - Reporting execution time of a function
 - Updating GenStage
 
