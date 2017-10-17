@@ -78,7 +78,7 @@ defmodule Alchemetrics do
   """
 
   @doc """
-  Reports a generic value.
+  Reports a specific value or the execution time of a function.
 
   The following measures will be applied:
 
@@ -90,11 +90,13 @@ defmodule Alchemetrics do
     - `:last_interval`: Like in the Increment Data Set, the sum on the last interval is also available here.
     - `:total`: Like in the Increment Data Set, the total sum since the first report is also available here.
 
-  ## Params:
+  ## Reporting a specific value
+
+  ### Params:
     - `value`: The collected value. Can be any integer
     - `name`: Identifies the dataset where this value should be stored. Can be an `atom` or a `KeywordList`.
 
-  ## Usage:
+  ### Usage:
 
   Reports are useful to report generic values like a response time for a given route. Therefore, you could create a Plug that reports the response time of a certain route:
 
@@ -125,6 +127,30 @@ defmodule Alchemetrics do
     plug MyApp.Plugs.RequestMeasurer
     ...
   end
+  ```
+
+
+  ## Reporting a function execution time
+
+  ### Params:
+    - `name`: Identifies the dataset where this value should be stored. Can be an `atom` or a `KeywordList`.
+    - `function`: Behaviour that will be executed and measured. Can be any function
+
+  ### Return:
+    The return of the function after being executed.
+
+  ### Usage:
+  ```elixir
+  metric_name = [
+    processing_time: %{
+      processor: MyApp.MatrixOperator,
+      operation: "multiplication",
+    }
+  ]
+
+  Alchemetrics.report(metric_name, fn ->
+    MyApp.MatrixOperator.multiply(matrix1, matrix2)
+  end)
   ```
   """
   def report(metadata, function) when is_function(function) do
