@@ -37,5 +37,15 @@ defmodule Alchemetrics.MetricTest do
       assert List.first(metrics_array).scope == :histogram
       assert List.last(metrics_array).scope == :spiral
     end
+
+    @metadata [type: :request, controller: "controller_name", action: "action_name"]
+    test "creates a metric in which its name is the union of scope and metadata" do
+      {histogram, spiral} = Event.create(%{datapoints: @allowed_metrics, value: 1, metadata: @metadata})
+      |> Metric.from_event
+      |> List.to_tuple
+      
+      assert histogram.name == [:histogram, @metadata]
+      assert spiral.name == [:spiral, @metadata]
+    end
   end
 end
