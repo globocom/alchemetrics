@@ -11,13 +11,13 @@ defmodule Alchemetrics.Exometer do
   def ensure_created_and_subscribed(%Alchemetrics.Exometer.Metric{name: name, scope: _scope} = metric) do
     if(metric_undefined?(name)) do
       create(metric)
-      ensure_subscribed(metric)
     end
   end
 
   defp create(%Alchemetrics.Exometer.Metric{} = metric) do
     try do
       :exometer.new(metric.name, metric.scope, [time_span: report_interval(), __alchemetrics__: %{metadata: metric.metadata}])
+      ensure_subscribed(metric)
     rescue
       ErlangError -> :ok
     end
