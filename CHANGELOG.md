@@ -1,3 +1,6 @@
+## 0.5.1 (2017-10-31)
+- Fix metric creation.
+
 ## 0.5.0 (2017-10-17)
 - Reporting execution time of a function
 - Updating GenStage
