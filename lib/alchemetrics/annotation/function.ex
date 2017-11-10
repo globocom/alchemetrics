@@ -94,21 +94,39 @@ defmodule Alchemetrics.Annotation.Function do
   end
 
   defp recreate_without_guard_clauses(%Function{} = function) do
-    quote do
-      # Recreating function signature: def name(param1, param2...) do
-      def unquote(function.name)(unquote_splicing(function.args))  do
-        unquote(function.body)
-        |> Keyword.get(:do)
+    if Version.match?(System.version(), ">= 1.5.0") do
+      quote do
+        # Recreating function signature: def name(param1, param2...) do
+        def unquote(function.name)(unquote_splicing(function.args))  do
+          unquote(function.body)
+          |> Keyword.get(:do)
+        end
+      end
+    else
+      quote do
+        # Recreating function signature: def name(param1, param2...) do
+        def unquote(function.name)(unquote_splicing(function.args))  do
+          unquote(function.body)
+        end
       end
     end
   end
 
   defp recreate_with_guard_clauses(%Function{} = function) do
-    quote do
-      # Same as before but with guard clauses
-      def unquote(function.name)(unquote_splicing(function.args)) when unquote_splicing(function.guards) do
-        unquote(function.body)
-        |> Keyword.get(:do)
+    if Version.match?(System.version(), ">= 1.5.0") do
+      quote do
+        # Same as before but with guard clauses
+        def unquote(function.name)(unquote_splicing(function.args)) when unquote_splicing(function.guards) do
+          unquote(function.body)
+          |> Keyword.get(:do)
+        end
+      end
+    else
+      quote do
+        # Same as before but with guard clauses
+        def unquote(function.name)(unquote_splicing(function.args)) when unquote_splicing(function.guards) do
+          unquote(function.body)
+        end
       end
     end
   end
