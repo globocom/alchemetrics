@@ -16,4 +16,9 @@ defmodule FakeAnnotatedModule do
   def head(a \\ 1)
   def head(a) when a > 2, do: a*2
   def head(a), do: a
+
+  @alchemetrics instrument_function: true
+  def different_arity(a), do: a
+
+  def different_arity(a, b), do: a+b
 end
