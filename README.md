@@ -29,6 +29,16 @@ Each metric report creates a new event that follows the GenStage flow. With the 
 
 Documentation is available at [HexDocs](https://hexdocs.pm/alchemetrics/api-reference.html)
 
+## Installation
+
+Alchemetrics is available on [Hex](https://hex.pm/packages/alchemetrics). All you have to do is to add it to `mix.exs` as a test dependency.
+
+```elixir
+def deps do
+  [{:alchemetrics, "~> 0.5.1"}]
+end
+```
+
 ## Reports
 Reports are made via calls to Alchemetrics functions. It is through reports that Alchemetrics stores a value to be measured and sent to the backends. Further details about reports can be found in the [documentation available in HexDocs](https://hexdocs.pm/alchemetrics/Alchemetrics.html).
 
