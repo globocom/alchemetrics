@@ -54,8 +54,7 @@
   defp deps do
     [
       {:gen_stage, "~> 0.12"},
-      {:exometer_core, "~> 1.0", hex: :basho_exometer_core},
-
+      {:exometer_core, "~> 1.0"},
       {:ex_doc, ">= 0.0.0", only: :dev},
       {:mock, "~> 0.3.1", only: :test},
       {:excoveralls, "~> 0.7", only: :test}
