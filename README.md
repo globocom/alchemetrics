@@ -5,7 +5,7 @@
 </p>
 
 <p align="center">
-  Elixir metrics reporter and collector
+  Metrics collection and reporting for Elixir applications.
 </p>
 
 <p align="center">
@@ -58,7 +58,7 @@ You can enable `Alchemetrics.ConsoleBackend` when your application boot by addin
 
 config :alchemetrics,
   backends: [
-    {Alchemetrics.ConsoleReporter, []}
+    {Alchemetrics.ConsoleBackend, []}
   ]
 ```
 
