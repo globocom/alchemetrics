@@ -18,6 +18,9 @@
   <a href="https://hex.pm/packages/alchemetrics">
     <img alt="Hex" src="https://img.shields.io/hexpm/dt/alchemetrics.svg">
   </a>
+  <a href="http://inch-ci.org/github/globocom/alchemetrics">
+    <img alt="Alchemetrics docs" src="http://inch-ci.org/github/globocom/alchemetrics.svg?branch=master&style=flat" />
+  </a>
 </p>
 
 ## About
