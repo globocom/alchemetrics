@@ -11,7 +11,7 @@
     [
       app: :alchemetrics,
       version: "0.5.2",
-      elixir: "~> 1.4",
+      elixir: "~> 1.12.2",
       elixirc_paths: elixirc_paths(Mix.env),
       build_embedded: Mix.env == :prod,
       start_permanent: Mix.env == :prod,
@@ -53,11 +53,11 @@
   # Type "mix help deps" for more examples and options
   defp deps do
     [
-      {:gen_stage, "~> 0.12"},
-      {:exometer_core, "~> 1.0"},
-      {:ex_doc, ">= 0.0.0", only: :dev},
-      {:mock, "~> 0.3.1", only: :test},
-      {:excoveralls, "~> 0.7", only: :test}
+      {:gen_stage, "~> 1.1"},
+      {:exometer_core, "~> 1.6"},
+      {:ex_doc, "~> 0.25.3", only: :dev},
+      {:mock, "~> 0.3.7", only: :test},
+      {:excoveralls, "~> 0.14.3", only: :test}
     ]
   end
 
